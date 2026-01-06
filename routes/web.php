@@ -1,12 +1,14 @@
 <?php
-use App\Http\Controllers\Auth\AuthenticatedSessionController;
-use App\Http\Controllers\ProfileController;
+
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Admin\RevenueCategoryController;
 use App\Http\Controllers\Admin\RevenueItemController;
 use App\Http\Controllers\Admin\PaymentController;
 use App\Http\Controllers\Admin\PenaltyController;
 use App\Http\Controllers\Admin\AuditLogController;
+use App\Http\Controllers\Admin\ReportsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,12 +20,10 @@ Route::get('/', function () {
 });
 
 // Authentication Routes
-Route::get('login', [AuthenticatedSessionController::class, 'create'])
-    ->middleware('guest')
-    ->name('login');
-
-Route::post('login', [AuthenticatedSessionController::class, 'store'])
-    ->middleware('guest');
+Route::middleware('guest')->group(function () {
+    Route::get('login', [AuthenticatedSessionController::class, 'create'])->name('login');
+    Route::post('login', [AuthenticatedSessionController::class, 'store']);
+});
 
 Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])
     ->middleware('auth')
@@ -31,33 +31,49 @@ Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])
 
 /*
 |--------------------------------------------------------------------------
-| Admin Routes (SECURED) - Place BEFORE regular user routes
+| Admin Routes (SECURED)
 |--------------------------------------------------------------------------
 */
 Route::middleware(['auth', 'admin'])
     ->prefix('admin')
     ->name('admin.')
     ->group(function () {
+
         // Admin Dashboard
         Route::get('/dashboard', function () {
             return view('admin.dashboard');
         })->name('dashboard');
 
-        // Revenue Resources
+        // Revenue Resources (Accessible by all Admins)
         Route::resource('categories', RevenueCategoryController::class)->except(['show']);
         Route::resource('items', RevenueItemController::class)->except(['show']);
         Route::resource('payments', PaymentController::class)->except(['show']);
         Route::resource('penalties', PenaltyController::class)->except(['show']);
 
-        // Audit Logs (SUPER ADMIN ONLY)
+        // Reports Group
+        Route::prefix('reports')->name('reports.')->group(function () {
+            
+            // Payment Reports (Admin + Super Admin)
+            Route::get('payments/pdf', [ReportsController::class, 'paymentsPdf'])->name('payments.pdf');
+            Route::get('payments/excel', [ReportsController::class, 'paymentsExcel'])->name('payments.excel');
+
+            // Audit Log Reports (Strictly Super Admin Only)
+            Route::middleware(['super-admin'])->group(function () {
+                Route::get('audit-logs/pdf', [ReportsController::class, 'auditLogsPdf'])->name('audit-logs.pdf');
+                Route::get('audit-logs/excel', [ReportsController::class, 'auditLogsExcel'])->name('audit-logs.excel');
+            });
+        });
+
+        // Audit Logs Main View (Strictly Super Admin Only)
         Route::middleware(['super-admin'])->group(function () {
             Route::get('audit-logs', [AuditLogController::class, 'index'])->name('audit-logs.index');
         });
+
     });
 
 /*
 |--------------------------------------------------------------------------
-| Authenticated User Routes (Regular Users)
+| Regular User Routes
 |--------------------------------------------------------------------------
 */
 Route::middleware(['auth'])->group(function () {
@@ -72,7 +88,7 @@ Route::middleware(['auth'])->group(function () {
 
 /*
 |--------------------------------------------------------------------------
-| Auth Routes (Breeze defaults)
+| Auth Routes (Breeze/Default)
 |--------------------------------------------------------------------------
 */
 require __DIR__ . '/auth.php';

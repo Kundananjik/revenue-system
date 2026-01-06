@@ -1,4 +1,7 @@
 <?php
+use Illuminate\Support\AggregateServiceProvider;
+use Illuminate\Support\Facades\Facade;
+use Illuminate\Support\ServiceProvider;
 
 return [
 
@@ -118,9 +121,28 @@ return [
     |
     */
 
+/* ... existing config above ... */
+
     'maintenance' => [
         'driver' => env('APP_MAINTENANCE_DRIVER', 'file'),
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
 
-];
+    // --- ADD THE SECTIONS BELOW INSIDE THE RETURN ARRAY ---
+
+    'providers' => ServiceProvider::defaultProviders()->merge([
+        /*
+         * Package Service Providers...
+         */
+
+        /*
+         * Application Service Providers...
+         */
+        App\Providers\AppServiceProvider::class,
+        // ... other providers
+    ])->toArray(),
+
+    'aliases' => Facade::defaultAliases()->merge([
+    ])->toArray(),
+
+]; // This is the final closing bracket of the file

@@ -3,24 +3,33 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Models\User;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
+use App\Models\User;
 
 class SuperAdminSeeder extends Seeder
 {
-    public function run()
+    /**
+     * Run the database seeds.
+     */
+    public function run(): void
     {
         // Check if a super-admin already exists
-        $superAdmin = User::where('email', 'superadmin@example.com')->first();
+        $superAdminEmail = 'superadmin@example.com';
+
+        $superAdmin = User::where('email', $superAdminEmail)->first();
+
         if (!$superAdmin) {
             User::create([
                 'name' => 'Super Admin',
-                'email' => 'superadmin@example.com',
-                'password' => Hash::make('Password123!'), // Set a secure password
-                'role' => 'super-admin', // This is critical
+                'email' => $superAdminEmail,
+                'password' => Hash::make('SuperSecret123!'), // change to a secure password
+                'role' => 'super-admin',
+                'email_verified_at' => now(),
+                'remember_token' => Str::random(10),
             ]);
 
-            $this->command->info('Super Admin created: superadmin@example.com / Password123!');
+            $this->command->info('Super Admin user created successfully.');
         } else {
             $this->command->info('Super Admin already exists.');
         }
