@@ -9,6 +9,7 @@ use App\Http\Controllers\Admin\PaymentController;
 use App\Http\Controllers\Admin\PenaltyController;
 use App\Http\Controllers\Admin\AuditLogController;
 use App\Http\Controllers\Admin\ReportsController;
+use App\Http\Controllers\Admin\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -44,31 +45,38 @@ Route::middleware(['auth', 'admin'])
             return view('admin.dashboard');
         })->name('dashboard');
 
-        // Revenue Resources (Accessible by all Admins)
+        // User Management (Admins)
+        Route::resource('users', UserController::class)->except(['show']);
+
+        // Revenue Resources
         Route::resource('categories', RevenueCategoryController::class)->except(['show']);
         Route::resource('items', RevenueItemController::class)->except(['show']);
         Route::resource('payments', PaymentController::class)->except(['show']);
         Route::resource('penalties', PenaltyController::class)->except(['show']);
 
-        // Reports Group
+        // Reports
         Route::prefix('reports')->name('reports.')->group(function () {
-            
-            // Payment Reports (Admin + Super Admin)
-            Route::get('payments/pdf', [ReportsController::class, 'paymentsPdf'])->name('payments.pdf');
-            Route::get('payments/excel', [ReportsController::class, 'paymentsExcel'])->name('payments.excel');
 
-            // Audit Log Reports (Strictly Super Admin Only)
+            Route::get('payments/pdf', [ReportsController::class, 'paymentsPdf'])
+                ->name('payments.pdf');
+
+            Route::get('payments/excel', [ReportsController::class, 'paymentsExcel'])
+                ->name('payments.excel');
+
             Route::middleware(['super-admin'])->group(function () {
-                Route::get('audit-logs/pdf', [ReportsController::class, 'auditLogsPdf'])->name('audit-logs.pdf');
-                Route::get('audit-logs/excel', [ReportsController::class, 'auditLogsExcel'])->name('audit-logs.excel');
+                Route::get('audit-logs/pdf', [ReportsController::class, 'auditLogsPdf'])
+                    ->name('audit-logs.pdf');
+
+                Route::get('audit-logs/excel', [ReportsController::class, 'auditLogsExcel'])
+                    ->name('audit-logs.excel');
             });
         });
 
-        // Audit Logs Main View (Strictly Super Admin Only)
+        // Audit Logs (Super Admin only)
         Route::middleware(['super-admin'])->group(function () {
-            Route::get('audit-logs', [AuditLogController::class, 'index'])->name('audit-logs.index');
+            Route::get('audit-logs', [AuditLogController::class, 'index'])
+                ->name('audit-logs.index');
         });
-
     });
 
 /*

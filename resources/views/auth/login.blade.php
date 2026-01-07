@@ -8,6 +8,22 @@
 </head>
 <body class="min-h-screen bg-gray-100 flex flex-col">
 
+    <nav class="bg-white border-b border-gray-200 py-3 px-6 shadow-sm">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+                <div class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center text-white font-bold">R</div>
+                <span class="font-bold text-gray-800 hidden sm:block">Revenue System</span>
+            </div>
+            
+            <a href="{{ url('/') }}" class="flex items-center text-sm font-medium text-gray-600 hover:text-blue-600 transition-colors">
+                <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+                </svg>
+                Back to Home
+            </a>
+        </div>
+    </nav>
+
     <div class="flex-grow flex items-center justify-center p-4">
         <div class="w-full max-w-md bg-white shadow-xl rounded-2xl p-8">
 
@@ -67,8 +83,8 @@
                 </div>
 
                 <div class="flex items-center justify-between">
-                    <label class="flex items-center text-sm text-gray-600">
-                        <input type="checkbox" name="remember" class="rounded border-gray-300 text-blue-600">
+                    <label class="flex items-center text-sm text-gray-600 cursor-pointer">
+                        <input type="checkbox" name="remember" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
                         <span class="ml-2">Remember me</span>
                     </label>
 
@@ -85,6 +101,15 @@
                 >
                     Sign In
                 </button>
+
+                @if (Route::has('register'))
+                    <div class="text-center mt-4">
+                        <p class="text-sm text-gray-600">
+                            Don't have an account? 
+                            <a href="{{ route('register') }}" class="text-blue-600 font-medium hover:underline">Register</a>
+                        </p>
+                    </div>
+                @endif
             </form>
         </div>
     </div>

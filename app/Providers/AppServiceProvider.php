@@ -2,33 +2,38 @@
 
 namespace App\Providers;
 
-use App\Models\RevenueItem;
-use App\Observers\RevenueItemObserver;
 use Illuminate\Support\ServiceProvider;
-use Illuminate\Pagination\Paginator;
+use Illuminate\Support\Facades\Gate;
+
+use App\Models\User;
+use App\Models\AuditLog;
+use App\Models\RevenueItem;
+use App\Models\Payment;
+
+use App\Policies\UserPolicy;
+use App\Policies\AuditLogPolicy;
+
+use App\Observers\RevenueItemObserver;
+use App\Observers\PaymentObserver;
 
 class AppServiceProvider extends ServiceProvider
 {
-    /**
-     * Register any application services.
-     */
     public function register(): void
     {
         //
     }
 
-    /**
-     * Bootstrap any application services.
-     */
     public function boot(): void
     {
-        // Registering the RevenueItem Observer
+        // Register policies (Laravel 11 way)
+        Gate::policy(User::class, UserPolicy::class);
+        Gate::policy(AuditLog::class, AuditLogPolicy::class);
+
+        // Register observers
         RevenueItem::observe(RevenueItemObserver::class);
+        Payment::observe(PaymentObserver::class);
 
-        // Registering the Payment Observer
-        \App\Models\Payment::observe(\App\Observers\PaymentObserver::class);
-
-        // Optional: If you use Tailwind for pagination (default in L11)
+        // Optional pagination styling
         // Paginator::useTailwind();
     }
 }

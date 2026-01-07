@@ -19,6 +19,7 @@
                     <a href="{{ route('admin.items.index') }}" class="block px-4 py-2 rounded transition hover:bg-blue-50 {{ request()->routeIs('admin.items.*') ? 'bg-blue-100 text-blue-700 font-semibold' : 'text-gray-600' }}">Revenue Items</a>
                     <a href="{{ route('admin.payments.index') }}" class="block px-4 py-2 rounded transition hover:bg-blue-50 {{ request()->routeIs('admin.payments.*') ? 'bg-blue-100 text-blue-700 font-semibold' : 'text-gray-600' }}">Payments</a>
                     <a href="{{ route('admin.penalties.index') }}" class="block px-4 py-2 rounded transition hover:bg-blue-50 {{ request()->routeIs('admin.penalties.*') ? 'bg-blue-100 text-blue-700 font-semibold' : 'text-gray-600' }}">Penalties</a>
+                    <a href="{{ route('admin.users.index') }}" class="block px-4 py-2 rounded transition hover:bg-blue-50 {{ request()->routeIs('admin.users.*') ? 'bg-blue-100 text-blue-700 font-semibold' : 'text-gray-600' }}">Users</a>
                     
                     @if(auth()->user()->role === 'super-admin')
                         <div class="pt-4 mt-4 border-t border-gray-100">
@@ -55,7 +56,8 @@
                     <a href="{{ route('admin.items.index') }}" class="block px-4 py-2 rounded {{ request()->routeIs('admin.items.*') ? 'bg-blue-100 text-blue-700' : '' }}">Revenue Items</a>
                     <a href="{{ route('admin.payments.index') }}" class="block px-4 py-2 rounded {{ request()->routeIs('admin.payments.*') ? 'bg-blue-100 text-blue-700' : '' }}">Payments</a>
                     <a href="{{ route('admin.penalties.index') }}" class="block px-4 py-2 rounded {{ request()->routeIs('admin.penalties.*') ? 'bg-blue-100 text-blue-700' : '' }}">Penalties</a>
-                    
+                    <a href="{{ route('admin.users.index') }}" class="block px-4 py-2 rounded {{ request()->routeIs('admin.users.*') ? 'bg-blue-100 text-blue-700' : '' }}">Users</a>
+
                     @if(auth()->user()->role === 'super-admin')
                         <a href="{{ route('admin.audit-logs.index') }}" 
                            class="block px-4 py-2 rounded {{ request()->routeIs('admin.audit-logs.*') ? 'bg-blue-100 text-blue-700' : '' }}">

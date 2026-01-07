@@ -8,11 +8,24 @@
             font-family: DejaVu Sans, sans-serif; 
             font-size: 10px; 
             color: #333;
+            margin: 20px;
         }
-        h3 {
+        .header {
             text-align: center;
             margin-bottom: 20px;
+            border-bottom: 2px solid #333;
+            padding-bottom: 10px;
+        }
+        h3 {
+            margin: 0 0 5px 0;
+            font-size: 18px;
             text-transform: uppercase;
+            color: #000;
+        }
+        .meta {
+            font-size: 9px;
+            color: #666;
+            margin-top: 5px;
         }
         table { 
             width: 100%; 
@@ -20,13 +33,20 @@
             margin-bottom: 20px;
         }
         th, td { 
-            border: 0.5px solid #ccc; 
+            border: 1px solid #ddd; 
             padding: 6px 4px; 
             text-align: left;
+            vertical-align: top;
         }
         th { 
-            background-color: #f2f2f2; 
+            background-color: #f5f5f5; 
             font-weight: bold;
+            font-size: 9px;
+            text-transform: uppercase;
+            color: #555;
+        }
+        td {
+            font-size: 9px;
         }
         .right { 
             text-align: right; 
@@ -35,71 +55,207 @@
             text-align: center;
         }
         .total-row {
-            background-color: #f9f9f9;
+            background-color: #e8f4f8;
             font-weight: bold;
+            font-size: 10px;
+        }
+        .amount {
+            font-weight: bold;
+            color: #000;
+        }
+        .penalty {
+            color: #c00;
+            font-weight: bold;
+        }
+        .badge {
+            display: inline-block;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 8px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+        .badge-paid {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        .badge-pending {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+        .badge-failed {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        .badge-default {
+            background-color: #e2e3e5;
+            color: #383d41;
+        }
+        .summary {
+            margin-top: 15px;
+            padding: 10px;
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .summary-title {
+            font-weight: bold;
+            font-size: 10px;
+            margin-bottom: 5px;
+        }
+        .summary-item {
+            font-size: 9px;
+            margin: 3px 0;
+        }
+        .footer {
+            margin-top: 20px;
+            padding-top: 10px;
+            border-top: 1px solid #ddd;
+            font-size: 8px;
+            color: #666;
+            text-align: center;
+        }
+        .small {
+            font-size: 8px;
         }
     </style>
 </head>
 <body>
+    <div class="header">
+        <h3>Payments Report</h3>
+        <div class="meta">
+            Generated on: {{ now()->format('F d, Y \a\t H:i:s') }} | 
+            Total Records: {{ $payments->count() }}
+        </div>
+    </div>
 
-<h3>Payments Report</h3>
-<p style="margin-bottom: 10px;">Generated on: {{ now()->format('Y-m-d H:i:s') }}</p>
-
-<table>
-    <thead>
-        <tr>
-            <th>ID</th>
-            <th>Payer Name</th>
-            <th>Revenue Item</th>
-            <th>Amount (ZMW)</th>
-            <th>Penalty (ZMW)</th>
-            <th>Status</th>
-            <th>Payment Method</th>
-            <th>Reference</th>
-            <th>Paid At</th>
-            <th>Created At</th>
-        </tr>
-    </thead>
-    <tbody>
-        @php 
-            $totalAmount = 0; 
-            $totalPenalty = 0;
-        @endphp
-        @forelse($payments as $payment)
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 5%;">ID</th>
+                <th style="width: 12%;">Payer Name</th>
+                <th style="width: 15%;">Revenue Item</th>
+                <th style="width: 10%;">Amount (ZK)</th>
+                <th style="width: 10%;">Penalty (ZK)</th>
+                <th style="width: 8%;">Status</th>
+                <th style="width: 10%;">Payment Method</th>
+                <th style="width: 12%;">Reference</th>
+                <th style="width: 12%;">Paid Date</th>
+            </tr>
+        </thead>
+        <tbody>
             @php 
-                $totalAmount += $payment->amount;
-                $totalPenalty += $payment->penalty_amount;
+                $totalAmount = 0; 
+                $totalPenalty = 0;
+                $statusCounts = [
+                    'paid' => 0,
+                    'pending' => 0,
+                    'failed' => 0,
+                ];
             @endphp
-            <tr>
-                <td>{{ $payment->id }}</td>
-                <td>{{ $payment->payer->name ?? 'N/A' }}</td>
-                <td>{{ $payment->revenueItem->name ?? 'N/A' }}</td>
-                <td class="right">{{ number_format($payment->amount, 2) }}</td>
-                <td class="right">{{ number_format($payment->penalty_amount ?? 0, 2) }}</td>
-                <td class="center">{{ ucfirst($payment->status) }}</td>
-                <td class="center">{{ strtoupper($payment->payment_method ?? 'N/A') }}</td>
-                
-                <td>{{ $payment->reference ?? '-' }}</td>
-                <td>{{ $payment->paid_at?->format('Y-m-d H:i') ?? '-' }}</td>
-                <td>{{ $payment->created_at?->format('Y-m-d H:i') ?? '-' }}</td>
+            @forelse($payments as $payment)
+                @php 
+                    $totalAmount += $payment->amount;
+                    $totalPenalty += $payment->penalty_amount ?? 0;
+                    
+                    $status = strtolower($payment->status);
+                    if(in_array($status, ['paid', 'completed', 'success'])) {
+                        $statusCounts['paid']++;
+                        $badgeClass = 'badge-paid';
+                    } elseif($status === 'pending') {
+                        $statusCounts['pending']++;
+                        $badgeClass = 'badge-pending';
+                    } elseif(in_array($status, ['failed', 'cancelled'])) {
+                        $statusCounts['failed']++;
+                        $badgeClass = 'badge-failed';
+                    } else {
+                        $badgeClass = 'badge-default';
+                    }
+                @endphp
+                <tr>
+                    <td class="center">{{ $payment->id }}</td>
+                    <td>{{ $payment->payer->name ?? 'N/A' }}</td>
+                    <td class="small">{{ $payment->revenueItem->name ?? 'N/A' }}</td>
+                    <td class="right amount">{{ number_format($payment->amount, 2) }}</td>
+                    <td class="right {{ $payment->penalty_amount > 0 ? 'penalty' : '' }}">
+                        {{ number_format($payment->penalty_amount ?? 0, 2) }}
+                    </td>
+                    <td class="center">
+                        <span class="badge {{ $badgeClass }}">{{ ucfirst($payment->status) }}</span>
+                    </td>
+                    <td class="center small">{{ strtoupper($payment->payment_method ?? 'N/A') }}</td>
+                    <td class="small">{{ $payment->reference ?? '-' }}</td>
+                    <td class="small">{{ $payment->paid_at?->format('M d, Y H:i') ?? '-' }}</td>
+                </tr>
+            @empty
+                <tr>
+                    <td colspan="9" style="text-align:center; padding: 20px; color: #999;">
+                        No payments found for the selected period.
+                    </td>
+                </tr>
+            @endforelse
+        </tbody>
+        @if($payments->count() > 0)
+        <tfoot>
+            <tr class="total-row">
+                <td colspan="3" class="right">TOTALS:</td>
+                <td class="right amount">ZK {{ number_format($totalAmount, 2) }}</td>
+                <td class="right {{ $totalPenalty > 0 ? 'penalty' : '' }}">ZK {{ number_format($totalPenalty, 2) }}</td>
+                <td colspan="4"></td>
             </tr>
-        @empty
-            <tr>
-                <td colspan="10" style="text-align:center;">No payments found.</td>
+            <tr class="total-row">
+                <td colspan="3" class="right">GRAND TOTAL:</td>
+                <td colspan="2" class="right amount" style="font-size: 11px;">ZK {{ number_format($totalAmount + $totalPenalty, 2) }}</td>
+                <td colspan="4"></td>
             </tr>
-        @endforelse
-    </tbody>
-    @if($payments->count() > 0)
-    <tfoot>
-        <tr class="total-row">
-            <td colspan="3" class="right">TOTALS:</td>
-            <td class="right">{{ number_format($totalAmount, 2) }}</td>
-            <td class="right">{{ number_format($totalPenalty, 2) }}</td>
-            <td colspan="5" style="background-color: white; border: none;"></td>
-        </tr>
-    </tfoot>
-    @endif
-</table>
+        </tfoot>
+        @endif
+    </table>
 
+    @if($payments->isNotEmpty())
+        <div class="summary">
+            <div class="summary-title">Payment Summary</div>
+            <div class="summary-item">
+                <strong>Total Payments:</strong> {{ $payments->count() }}
+            </div>
+            <div class="summary-item">
+                <strong>Status Breakdown:</strong>
+                Paid ({{ $statusCounts['paid'] }}), 
+                Pending ({{ $statusCounts['pending'] }}), 
+                Failed ({{ $statusCounts['failed'] }})
+            </div>
+            <div class="summary-item">
+                <strong>Total Amount Collected:</strong> ZK {{ number_format($totalAmount, 2) }}
+            </div>
+            <div class="summary-item">
+                <strong>Total Penalties:</strong> ZK {{ number_format($totalPenalty, 2) }}
+            </div>
+            <div class="summary-item">
+                <strong>Grand Total (Amount + Penalties):</strong> ZK {{ number_format($totalAmount + $totalPenalty, 2) }}
+            </div>
+            <div class="summary-item">
+                <strong>Date Range:</strong> 
+                @if($payments->count() > 0)
+                    {{ $payments->min('paid_at')?->format('M d, Y') ?? 'N/A' }} - 
+                    {{ $payments->max('paid_at')?->format('M d, Y') ?? 'N/A' }}
+                @else
+                    N/A
+                @endif
+            </div>
+            <div class="summary-item">
+                <strong>Payment Methods Used:</strong>
+                @php
+                    $methods = $payments->pluck('payment_method')->filter()->unique()->sort()->values();
+                @endphp
+                {{ $methods->isEmpty() ? 'N/A' : $methods->map(fn($m) => strtoupper($m))->join(', ') }}
+            </div>
+        </div>
+    @endif
+
+    <div class="footer">
+        Revenue System | Payments Report | 
+        © {{ date('Y') }} Developed by Kundananji Simukonda | 
+        Page generated at {{ now()->format('H:i:s') }}
+    </div>
 </body>
 </html>
