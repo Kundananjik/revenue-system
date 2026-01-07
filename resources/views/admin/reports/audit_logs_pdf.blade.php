@@ -47,6 +47,8 @@
             <th>Action</th>
             <th>Model</th>
             <th>Model ID</th>
+            <th>Old Amount</th>
+            <th>New Amount</th>
             <th>IP Address</th>
             <th>Date</th>
         </tr>
@@ -59,12 +61,26 @@
                 <td class="small">{{ $log->action }}</td>
                 <td>{{ class_basename($log->auditable_type) }}</td>
                 <td>{{ $log->auditable_id }}</td>
-                <td>{{ $log->ip_address }}</td>
+                <td>
+                    @if($log->auditable_type === \App\Models\Payment::class)
+                        {{ $log->old_values['amount'] ?? '-' }}
+                    @else
+                        -
+                    @endif
+                </td>
+                <td>
+                    @if($log->auditable_type === \App\Models\Payment::class)
+                        {{ $log->new_values['amount'] ?? '-' }}
+                    @else
+                        -
+                    @endif
+                </td>
+                <td>{{ $log->ip_address ?? '-' }}</td>
                 <td>{{ $log->created_at->format('Y-m-d H:i:s') }}</td>
             </tr>
         @empty
             <tr>
-                <td colspan="7" style="text-align:center;">
+                <td colspan="9" style="text-align:center;">
                     No audit logs found.
                 </td>
             </tr>

@@ -25,6 +25,9 @@ class AppServiceProvider extends ServiceProvider
         // Registering the RevenueItem Observer
         RevenueItem::observe(RevenueItemObserver::class);
 
+        // Registering the Payment Observer
+        \App\Models\Payment::observe(\App\Observers\PaymentObserver::class);
+
         // Optional: If you use Tailwind for pagination (default in L11)
         // Paginator::useTailwind();
     }
