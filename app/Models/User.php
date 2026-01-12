@@ -23,6 +23,12 @@ class User extends Authenticatable
         'remember_token',
     ];
 
+    public function payments()
+{
+    return $this->hasMany(\App\Models\Payment::class, 'user_id');
+}
+
+
     protected function casts(): array
     {
         return [

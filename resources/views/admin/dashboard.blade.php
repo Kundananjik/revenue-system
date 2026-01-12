@@ -80,7 +80,7 @@
                         <td class="px-4 py-2">{{ $item->id }}</td>
                         <td class="px-4 py-2">{{ $item->category->name ?? '-' }}</td>
                         <td class="px-4 py-2 font-medium">{{ $item->name }}</td>
-                        <td class="px-4 py-2">ZK {{ number_format($item->amount, 2) }}</td>
+                        <td class="px-4 py-2">ZMW {{ number_format($item->amount, 2) }}</td>
                         <td class="px-4 py-2 capitalize">{{ $item->payment_frequency }}</td>
                         <td class="px-4 py-2">
                             @if($item->is_active)

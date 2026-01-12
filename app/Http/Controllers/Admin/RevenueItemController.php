@@ -7,12 +7,20 @@ use App\Models\RevenueItem;
 use App\Models\RevenueCategory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Auth; // Fix 1: Added Auth Facade
 
 class RevenueItemController extends Controller
 {
     public function index()
     {
-        $items = RevenueItem::with('category')->get();
+        // Fix 2: Usually, Revenue Items are global (managed by admin), 
+        // but visible to all users. If these are global configs:
+        $items = RevenueItem::with('category')
+                    ->latest()
+                    ->paginate(10);
+
+        // Fix 3: If this is the ADMIN controller, return the admin view, 
+        // not the user view.
         return view('admin.items.index', compact('items'));
     }
 
@@ -47,7 +55,7 @@ class RevenueItemController extends Controller
             'payment_frequency' => $validated['payment_frequency'],
             'penalty_rate' => $validated['penalty_rate'] ?? 0,
             'is_active' => $validated['is_active'],
-            'created_by' => $request->user()->id,
+            'created_by' => Auth::id(), // Fix 4: Use Auth::id() for clarity
         ]);
 
         return redirect()->route('admin.items.index')

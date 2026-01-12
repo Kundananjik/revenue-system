@@ -156,7 +156,7 @@
                                 @if($loop->index < 3)
                                     <strong>{{ $key }}:</strong> 
                                     @if(in_array($key, ['amount', 'penalty_amount']))
-                                        <span class="amount">ZK {{ number_format((float)$value, 2) }}</span>
+                                        <span class="amount">ZMW {{ number_format((float)$value, 2) }}</span>
                                     @else
                                         {{ is_array($value) ? json_encode($value) : (strlen((string)$value) > 30 ? substr((string)$value, 0, 30) . '...' : $value) }}
                                     @endif

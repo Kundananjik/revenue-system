@@ -71,7 +71,7 @@
                                 <span class="text-gray-400">-</span>
                             @endif
                         </td>
-                        <td class="px-4 py-3 text-sm font-semibold text-red-600">ZK {{ number_format($penalty->amount, 2) }}</td>
+                        <td class="px-4 py-3 text-sm font-semibold text-red-600">ZMW {{ number_format($penalty->amount, 2) }}</td>
                         <td class="px-4 py-3 text-sm">
                             <span class="inline-flex items-center gap-1 bg-red-50 px-2.5 py-1 rounded-md text-xs font-medium text-red-700 border border-red-200">
                                 <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -174,7 +174,7 @@
                     <span class="font-medium">{{ $penalties->where('is_paid', false)->count() }} unpaid</span>
                 </div>
                 <div class="font-semibold text-red-600">
-                    Total Penalties: <span>ZK {{ number_format($penalties->sum('amount'), 2) }}</span>
+                    Total Penalties: <span>ZMW {{ number_format($penalties->sum('amount'), 2) }}</span>
                 </div>
             </div>
         </div>

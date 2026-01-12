@@ -58,7 +58,7 @@
                         <td class="px-4 py-3 text-sm text-gray-600">
                             <span class="px-2 py-1 bg-gray-100 rounded text-xs font-medium">{{ ucfirst($item->calculation_type) }}</span>
                         </td>
-                        <td class="px-4 py-3 text-sm text-gray-900 font-semibold">ZK {{ number_format($item->amount, 2) }}</td>
+                        <td class="px-4 py-3 text-sm text-gray-900 font-semibold">ZMW {{ number_format($item->amount, 2) }}</td>
                         <td class="px-4 py-3 text-sm text-gray-600 capitalize">{{ str_replace('_', ' ', $item->payment_frequency) }}</td>
                         <td class="px-4 py-3 text-sm text-gray-600">{{ number_format($item->penalty_rate * 100, 2) }}%</td>
                         <td class="px-4 py-3">

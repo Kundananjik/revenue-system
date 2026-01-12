@@ -7,7 +7,7 @@
     
     <!-- SEO Meta Tags -->
     <meta name="description" content="Revenue System - Comprehensive solution for tracking financial growth, managing user roles, and generating detailed reports in Zambia">
-    <meta name="keywords" content="revenue management, financial tracking, payment system, Zambia, ZK currency, revenue analytics">
+    <meta name="keywords" content="revenue management, financial tracking, payment system, Zambia, ZMW currency, revenue analytics">
     <meta name="author" content="Kundananji Simukonda">
     
     <!-- Open Graph Meta Tags -->
@@ -37,31 +37,46 @@
 </head>
 <body class="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50/30 flex flex-col antialiased">
 
-    <!-- Navigation -->
-    <nav class="bg-white/80 backdrop-blur-sm border-b border-gray-200/60 py-4 px-6 sticky top-0 z-50 shadow-sm">
-        <div class="max-w-7xl mx-auto flex justify-between items-center">
-            <div class="flex items-center gap-3">
-                <div class="h-10 w-10 bg-gradient-to-br from-blue-600 to-blue-700 rounded-lg flex items-center justify-center shadow-md">
-                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                    </svg>
-                </div>
-                <span class="text-2xl font-bold bg-gradient-to-r from-blue-600 to-blue-700 bg-clip-text text-transparent">Revenue System</span>
+<!-- Navigation -->
+<nav class="bg-white/80 backdrop-blur-sm border-b border-gray-200/60 py-4 px-6 sticky top-0 z-50 shadow-sm">
+    <div class="max-w-7xl mx-auto flex justify-between items-center">
+
+        <!-- Logo -->
+        <div class="flex items-center gap-3">
+            <div class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center text-white font-bold">
+                R
             </div>
-            <div class="flex items-center gap-3">
-                @if (Route::has('login'))
-                    @auth
-                        <a href="{{ url('/dashboard') }}" class="text-gray-700 hover:text-blue-600 font-semibold transition-colors duration-200">Dashboard</a>
-                    @else
-                        <a href="{{ route('login') }}" class="text-gray-700 hover:text-blue-600 font-semibold px-4 py-2 rounded-lg transition-all duration-200 hover:bg-gray-50">Log in</a>
-                        @if (Route::has('register'))
-                            <a href="{{ route('register') }}" class="bg-gradient-to-r from-blue-600 to-blue-700 text-white px-6 py-2.5 rounded-lg font-semibold hover:shadow-lg hover:shadow-blue-200 transition-all duration-200 transform hover:-translate-y-0.5">Register</a>
-                        @endif
-                    @endauth
-                @endif
-            </div>
+            <span class="text-2xl font-bold bg-gradient-to-r from-blue-600 to-blue-700 bg-clip-text text-transparent">
+                Revenue System
+            </span>
         </div>
-    </nav>
+
+        <!-- Auth Links -->
+        <div class="flex items-center gap-3">
+            @if (Route::has('login'))
+                @auth
+                    <a href="{{ url('/dashboard') }}"
+                       class="text-gray-700 hover:text-blue-600 font-semibold transition-colors duration-200">
+                        Dashboard
+                    </a>
+                @else
+                    <a href="{{ route('login') }}"
+                       class="text-gray-700 hover:text-blue-600 font-semibold px-4 py-2 rounded-lg transition-all duration-200 hover:bg-gray-50">
+                        Log in
+                    </a>
+
+                    @if (Route::has('register'))
+                        <a href="{{ route('register') }}"
+                           class="bg-gradient-to-r from-blue-600 to-blue-700 text-white px-6 py-2.5 rounded-lg font-semibold hover:shadow-lg hover:shadow-blue-200 transition-all duration-200 transform hover:-translate-y-0.5">
+                            Register
+                        </a>
+                    @endif
+                @endauth
+            @endif
+        </div>
+
+    </div>
+</nav>
 
     <!-- Main Content -->
     <main class="flex-grow flex items-center py-12">

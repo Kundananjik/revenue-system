@@ -85,7 +85,7 @@
                             </div>
                         </td>
                         <td class="px-4 py-3 text-sm text-gray-600">{{ $payment->revenueItem->name ?? '-' }}</td>
-                        <td class="px-4 py-3 text-sm text-gray-900 font-semibold">ZK {{ number_format($payment->amount, 2) }}</td>
+                        <td class="px-4 py-3 text-sm text-gray-900 font-semibold">ZMW {{ number_format($payment->amount, 2) }}</td>
                         <td class="px-4 py-3 text-sm">
                             <span class="inline-flex items-center gap-1 bg-gray-100 px-2.5 py-1 rounded-md text-xs font-medium text-gray-700">
                                 @if(strtolower($payment->payment_method ?? '') === 'cash')
@@ -102,7 +102,7 @@
                         </td>
                         <td class="px-4 py-3 text-sm">
                             @if($payment->penalty_amount > 0)
-                                <span class="text-red-600 font-semibold">ZK {{ number_format($payment->penalty_amount, 2) }}</span>
+                                <span class="text-red-600 font-semibold">ZMW {{ number_format($payment->penalty_amount, 2) }}</span>
                             @else
                                 <span class="text-gray-400">-</span>
                             @endif
@@ -193,7 +193,7 @@
             </div>
             @if($payments->sum('amount') > 0)
                 <div class="font-semibold">
-                    Total: <span class="text-blue-600">ZK {{ number_format($payments->sum('amount'), 2) }}</span>
+                    Total: <span class="text-blue-600">ZMW {{ number_format($payments->sum('amount'), 2) }}</span>
                 </div>
             @endif
         </div>

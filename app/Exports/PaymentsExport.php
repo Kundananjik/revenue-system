@@ -1,51 +1,47 @@
 <?php
+
 namespace App\Exports;
 
 use App\Models\Payment;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
-use Maatwebsite\Excel\Concerns\WithMapping; // Add this
 
-class PaymentsExport implements FromCollection, WithHeadings, WithMapping
+class PaymentsExport implements FromCollection, WithHeadings
 {
+    protected $userId;
+
+    public function __construct($userId)
+    {
+        $this->userId = $userId;
+    }
+
     public function collection()
     {
-        // Eager load relationships to prevent N+1 performance issues
-        return Payment::with(['payer', 'revenueItem'])->latest()->get();
+        return Payment::with(['payer', 'revenueItem', 'collector'])
+            ->where('user_id', $this->userId)
+            ->get()
+            ->map(function($payment) {
+                return [
+                    'ID' => $payment->id,
+                    'Payer' => $payment->payer->name ?? '-',
+                    'Revenue Item' => $payment->revenueItem->name ?? '-',
+                    'Amount' => $payment->amount,
+                    'Penalty' => $payment->penalty_amount,
+                    'Status' => ucfirst($payment->status),
+                    'Method' => $payment->payment_method ?? '-',
+                    'Reference' => $payment->reference ?? '-',
+                    'Collector' => $payment->collector->name ?? '-',
+                    'Paid At' => $payment->paid_at?->format('Y-m-d H:i') ?? '-',
+                    'Created At' => $payment->created_at?->format('Y-m-d H:i') ?? '-',
+                ];
+            });
     }
 
     public function headings(): array
     {
         return [
-            'ID',
-            'Payer Name',
-            'Revenue Item',
-            'Amount',
-            'Penalty',
-            'Status',
-            'Method',
-            'Reference',
-            'Paid At',
-            'Created At'
-        ];
-    }
-
-    /**
-    * @var Payment $payment
-    */
-    public function map($payment): array
-    {
-        return [
-            $payment->id,
-            $payment->payer->name ?? 'N/A',            // Show Name instead of ID
-            $payment->revenueItem->name ?? 'N/A',      // Show Item Name instead of ID
-            number_format($payment->amount, 2),        // Format currency
-            number_format($payment->penalty_amount, 2),
-            strtoupper($payment->status),
-            $payment->payment_method,
-            $payment->reference,
-            $payment->paid_at ? $payment->paid_at->format('Y-m-d H:i') : 'Unpaid',
-            $payment->created_at->format('Y-m-d H:i'),
+            'ID', 'Payer', 'Revenue Item', 'Amount', 'Penalty', 'Status', 
+            'Method', 'Reference', 'Collector', 'Paid At', 'Created At'
         ];
     }
 }

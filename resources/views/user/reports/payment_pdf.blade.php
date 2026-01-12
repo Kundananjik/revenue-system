@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Payments Report</title>
+    <title>My Payments Report</title>
     <style>
         body { 
             font-family: DejaVu Sans, sans-serif; 
@@ -122,7 +122,7 @@
 </head>
 <body>
     <div class="header">
-        <h3>Payments Report</h3>
+        <h3>My Payments Report</h3>
         <div class="meta">
             Generated on: {{ now()->format('F d, Y \a\t H:i:s') }} | 
             Total Records: {{ $payments->count() }}
@@ -133,11 +133,10 @@
         <thead>
             <tr>
                 <th style="width: 5%;">ID</th>
-                <th style="width: 12%;">Payer Name</th>
                 <th style="width: 15%;">Revenue Item</th>
-                <th style="width: 10%;">Amount (ZMW)</th>
+                <th style="width: 12%;">Amount (ZMW)</th>
                 <th style="width: 10%;">Penalty (ZMW)</th>
-                <th style="width: 8%;">Status</th>
+                <th style="width: 10%;">Status</th>
                 <th style="width: 10%;">Payment Method</th>
                 <th style="width: 12%;">Reference</th>
                 <th style="width: 12%;">Paid Date</th>
@@ -147,11 +146,7 @@
             @php 
                 $totalAmount = 0; 
                 $totalPenalty = 0;
-                $statusCounts = [
-                    'paid' => 0,
-                    'pending' => 0,
-                    'failed' => 0,
-                ];
+                $statusCounts = ['paid'=>0,'pending'=>0,'failed'=>0];
             @endphp
             @forelse($payments as $payment)
                 @php 
@@ -159,13 +154,13 @@
                     $totalPenalty += $payment->penalty_amount ?? 0;
                     
                     $status = strtolower($payment->status);
-                    if(in_array($status, ['paid', 'completed', 'success'])) {
+                    if(in_array($status, ['paid','completed','success'])) {
                         $statusCounts['paid']++;
                         $badgeClass = 'badge-paid';
                     } elseif($status === 'pending') {
                         $statusCounts['pending']++;
                         $badgeClass = 'badge-pending';
-                    } elseif(in_array($status, ['failed', 'cancelled'])) {
+                    } elseif(in_array($status, ['failed','cancelled'])) {
                         $statusCounts['failed']++;
                         $badgeClass = 'badge-failed';
                     } else {
@@ -174,7 +169,6 @@
                 @endphp
                 <tr>
                     <td class="center">{{ $payment->id }}</td>
-                    <td>{{ $payment->payer->name ?? 'N/A' }}</td>
                     <td class="small">{{ $payment->revenueItem->name ?? 'N/A' }}</td>
                     <td class="right amount">{{ number_format($payment->amount, 2) }}</td>
                     <td class="right {{ $payment->penalty_amount > 0 ? 'penalty' : '' }}">
@@ -189,8 +183,8 @@
                 </tr>
             @empty
                 <tr>
-                    <td colspan="9" style="text-align:center; padding: 20px; color: #999;">
-                        No payments found for the selected period.
+                    <td colspan="8" style="text-align:center; padding: 20px; color: #999;">
+                        No payments found.
                     </td>
                 </tr>
             @endforelse
@@ -198,13 +192,13 @@
         @if($payments->count() > 0)
         <tfoot>
             <tr class="total-row">
-                <td colspan="3" class="right">TOTALS:</td>
+                <td colspan="2" class="right">TOTALS:</td>
                 <td class="right amount">ZMW {{ number_format($totalAmount, 2) }}</td>
                 <td class="right {{ $totalPenalty > 0 ? 'penalty' : '' }}">ZMW {{ number_format($totalPenalty, 2) }}</td>
                 <td colspan="4"></td>
             </tr>
             <tr class="total-row">
-                <td colspan="3" class="right">GRAND TOTAL:</td>
+                <td colspan="2" class="right">GRAND TOTAL:</td>
                 <td colspan="2" class="right amount" style="font-size: 11px;">ZMW {{ number_format($totalAmount + $totalPenalty, 2) }}</td>
                 <td colspan="4"></td>
             </tr>
@@ -231,31 +225,13 @@
                 <strong>Total Penalties:</strong> ZMW {{ number_format($totalPenalty, 2) }}
             </div>
             <div class="summary-item">
-                <strong>Grand Total (Amount + Penalties):</strong> ZMW {{ number_format($totalAmount + $totalPenalty, 2) }}
-            </div>
-            <div class="summary-item">
-                <strong>Date Range:</strong> 
-                @if($payments->count() > 0)
-                    {{ $payments->min('paid_at')?->format('M d, Y') ?? 'N/A' }} - 
-                    {{ $payments->max('paid_at')?->format('M d, Y') ?? 'N/A' }}
-                @else
-                    N/A
-                @endif
-            </div>
-            <div class="summary-item">
-                <strong>Payment Methods Used:</strong>
-                @php
-                    $methods = $payments->pluck('payment_method')->filter()->unique()->sort()->values();
-                @endphp
-                {{ $methods->isEmpty() ? 'N/A' : $methods->map(fn($m) => strtoupper($m))->join(', ') }}
+                <strong>Grand Total:</strong> ZMW {{ number_format($totalAmount + $totalPenalty, 2) }}
             </div>
         </div>
     @endif
 
     <div class="footer">
-        Revenue System | Payments Report | 
-        © {{ date('Y') }} Developed by Kundananji Simukonda | 
-        Page generated at {{ now()->format('H:i:s') }}
+        My Payments Report | © {{ date('Y') }} | Page generated at {{ now()->format('H:i:s') }}
     </div>
 </body>
 </html>
