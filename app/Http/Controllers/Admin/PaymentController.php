@@ -22,12 +22,18 @@ class PaymentController extends Controller
     /**
      * Show the form for creating a new payment.
      */
-    public function create()
-    {
-        $users = User::all();
-        $items = RevenueItem::where('is_active', true)->get();
-        return view('admin.payments.create', compact('users', 'items'));
-    }
+public function create()
+{
+    // Users dropdown: only role 'user'
+    $users = User::where('role', 'user')->get();
+
+    // Collected By dropdown: everyone except 'user'
+    $collectors = User::where('role', '!=', 'user')->get();
+
+    $items = RevenueItem::all();
+
+    return view('admin.payments.create', compact('users', 'collectors', 'items'));
+}
 
     /**
      * Store a newly created payment in storage.

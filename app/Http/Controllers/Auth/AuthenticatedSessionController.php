@@ -12,7 +12,7 @@ use Illuminate\View\View;
 class AuthenticatedSessionController extends Controller
 {
     /**
-     * Show login form
+     * Show the login form
      */
     public function create(): View
     {
@@ -20,40 +20,49 @@ class AuthenticatedSessionController extends Controller
     }
 
     /**
-     * Handle login
+     * Handle an incoming authentication request
      */
     public function store(Request $request): RedirectResponse
     {
+        // 1. Validate credentials
         $request->validate([
             'email' => ['required', 'email'],
             'password' => ['required'],
         ]);
 
-        if (!Auth::attempt($request->only('email', 'password'), $request->filled('remember'))) {
+        // 2. Attempt login with "remember me"
+        if (!Auth::attempt(
+            $request->only('email', 'password'),
+            $request->filled('remember')
+        )) {
             throw ValidationException::withMessages([
                 'email' => __('auth.failed'),
             ]);
         }
 
+        // 3. Regenerate session to prevent fixation
         $request->session()->regenerate();
 
+        // 4. Get authenticated user
         $user = Auth::user();
 
-        // ROLE BASED REDIRECT
-        if ($user->role === 'admin' || $user->role === 'super-admin') {
-            return redirect()->route('admin.dashboard');
-        }
+        // 5. Redirect based on role
+$user = Auth::user();
 
-        if ($user->role === 'user') {
-            return redirect()->route('user.dashboard');
-        }
-
-        // fallback
-        return redirect('/');
+switch ($user->role) {
+    case 'super-admin':
+    case 'admin':
+        return redirect()->route('admin.dashboard');
+    case 'user':
+        return redirect()->route('user.dashboard');
+    case 'collector':
+        return redirect()->route('collector.dashboard');
+    default:
+        return redirect('/'); // fallback
+}
     }
-
     /**
-     * Handle logout
+     * Log out the user
      */
     public function destroy(Request $request): RedirectResponse
     {

@@ -1,4 +1,4 @@
-@extends('admin.layouts.app')
+@extends('collector.layouts.app')
 
 @section('title', 'Add Payment')
 
@@ -6,21 +6,8 @@
 <div class="max-w-3xl mx-auto bg-white p-6 rounded shadow">
     <h1 class="text-2xl font-bold mb-6">Add Payment</h1>
 
-    <form action="{{ route('admin.payments.store') }}" method="POST">
+    <form action="{{ route('collector.payments.store') }}" method="POST">
         @csrf
-
-        <div class="mb-4">
-            <label class="block font-medium mb-1">User</label>
-<select name="user_id" class="w-full border-gray-300 rounded p-2">
-    <option value="">-- Select User --</option>
-    @foreach($users as $user)
-        <option value="{{ $user->id }}" {{ old('user_id') == $user->id ? 'selected' : '' }}>
-            {{ $user->name }}
-        </option>
-    @endforeach
-</select>
-            @error('user_id') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
-        </div>
 
         <div class="mb-4">
             <label class="block font-medium mb-1">Revenue Item</label>
@@ -37,7 +24,7 @@
 
         <div class="mb-4">
             <label class="block font-medium mb-1">Amount</label>
-            <input type="number" step="0.01" name="amount" value="{{ old('amount') }}" class="w-full border-gray-300 rounded p-2">
+            <input type="number" step="0.01" name="amount" value="{{ old('amount') }}" class="w-full border-gray-300 rounded p-2" required>
             @error('amount') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
         </div>
 
@@ -53,14 +40,13 @@
                 <option value="pending" {{ old('status') == 'pending' ? 'selected' : '' }}>Pending</option>
                 <option value="paid" {{ old('status') == 'paid' ? 'selected' : '' }}>Paid</option>
                 <option value="failed" {{ old('status') == 'failed' ? 'selected' : '' }}>Failed</option>
-                <option value="reversed" {{ old('status') == 'reversed' ? 'selected' : '' }}>Reversed</option>
             </select>
             @error('status') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
         </div>
 
         <div class="mb-4">
             <label class="block font-medium mb-1">Payment Method</label>
-            <input type="text" name="payment_method" value="{{ old('payment_method') }}" class="w-full border-gray-300 rounded p-2">
+            <input type="text" name="payment_method" value="{{ old('payment_method') }}" class="w-full border-gray-300 rounded p-2" required>
             @error('payment_method') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
         </div>
 
@@ -71,23 +57,12 @@
         </div>
 
         <div class="mb-4">
-            <label class="block font-medium mb-1">Collected By</label>
-<select name="collected_by" class="w-full border-gray-300 rounded p-2">
-    <option value="">-- Select Collector --</option>
-    @foreach($collectors as $collector)
-        <option value="{{ $collector->id }}" {{ old('collected_by') == $collector->id ? 'selected' : '' }}>
-            {{ $collector->name }}
-        </option>
-    @endforeach
-</select>
-            @error('collected_by') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
-        </div>
-
-        <div class="mb-4">
             <label class="block font-medium mb-1">Paid At</label>
             <input type="datetime-local" name="paid_at" value="{{ old('paid_at') }}" class="w-full border-gray-300 rounded p-2">
             @error('paid_at') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
         </div>
+
+        <input type="hidden" name="collected_by" value="{{ auth()->id() }}">
 
         <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">Save Payment</button>
     </form>

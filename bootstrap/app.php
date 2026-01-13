@@ -11,10 +11,11 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
-        // Using string format to avoid "Undefined type" errors during setup
+        // Consolidated all aliases here
         $middleware->alias([
-            'admin'       => 'App\Http\Middleware\AdminMiddleware',
-            'super-admin' => 'App\Http\Middleware\SuperAdminMiddleware',
+            'admin'       => \App\Http\Middleware\AdminMiddleware::class,
+            'super-admin' => \App\Http\Middleware\SuperAdminMiddleware::class,
+            'role'        => \App\Http\Middleware\CheckRole::class, 
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

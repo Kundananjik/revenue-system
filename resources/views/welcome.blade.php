@@ -49,8 +49,7 @@
                 Revenue System
             </span>
         </div>
-    </div>
-</nav>
+        
         <!-- Auth Links -->
         <div class="flex items-center gap-3">
             @if (Route::has('login'))
@@ -74,7 +73,6 @@
                 @endauth
             @endif
         </div>
-
     </div>
 </nav>
 

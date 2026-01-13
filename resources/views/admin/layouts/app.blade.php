@@ -76,26 +76,26 @@
                         </svg>
                         Users
                     </a>
+@if(auth()->check() && auth()->user()->role === 'super-admin')
+    <div class="pt-4 mt-4 border-t border-gray-100">
+        <p class="px-4 text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">System</p>
 
-                    @if(auth()->check() && auth()->user()->role === 'super-admin')
-                        <div class="pt-4 mt-4 border-t border-gray-100">
-                            <p class="px-4 text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">System</p>
-                            <a href="{{ route('admin.audit-logs.index') }}"
-                               class="flex items-center gap-3 px-4 py-2 rounded transition hover:bg-blue-50 {{ request()->routeIs('admin.audit-logs.*') ? 'bg-blue-100 text-blue-700 font-semibold' : 'text-gray-600' }}">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                          d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
-                                </svg>
-                                Audit Logs
-                            </a>
-                        </div>
-                    @endif
+        <a href="{{ route('admin.reports.audit-logs.index') }}" 
+           class="flex items-center gap-3 px-4 py-2 rounded transition hover:bg-blue-50 {{ request()->routeIs('admin.reports.audit-logs.*') ? 'bg-blue-100 text-blue-700 font-semibold' : 'text-gray-600' }}">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+            </svg>
+            <span>Audit Logs</span>
+        </a>
+    </div>
+@endif
 
                     <!-- Account Settings (visible to all authenticated admins) -->
                     @auth
                         <div class="pt-4 mt-4 border-t border-gray-200">
                             <p class="px-4 text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Account Settings</p>
-                            <a href="{{ route('profile.edit') }}"
+                            <a href="{{ route('user.profile.edit') }}"
                                class="flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 {{ request()->routeIs('profile.edit') ? 'bg-blue-100 text-blue-700 font-semibold shadow-sm' : 'text-gray-600 hover:bg-gray-50' }}">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -171,19 +171,20 @@
                     </a>
 
                     @if(auth()->check() && auth()->user()->role === 'super-admin')
-                        <a href="{{ route('admin.audit-logs.index') }}" class="flex items-center gap-3 px-4 py-2 rounded {{ request()->routeIs('admin.audit-logs.*') ? 'bg-blue-100 text-blue-700' : '' }}">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                      d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
-                            </svg>
-                            Audit Logs
-                        </a>
+<a href="{{ route('admin.reports.audit-logs.index') }}" 
+   class="flex items-center gap-3 px-4 py-2 rounded {{ request()->routeIs('admin.reports.audit-logs.*') ? 'bg-blue-100 text-blue-700' : '' }}">
+    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+    </svg>
+    <span>Audit Logs</span>
+</a>
                     @endif
 
                     @auth
                         <div class="pt-4 mt-4 border-t border-gray-200">
                             <p class="px-4 text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Account</p>
-                            <a href="{{ route('profile.edit') }}" class="flex items-center gap-3 px-4 py-2 rounded {{ request()->routeIs('profile.edit') ? 'bg-blue-100 text-blue-700' : '' }}">
+                            <a href="{{ route('user.profile.edit') }}" class="flex items-center gap-3 px-4 py-2 rounded {{ request()->routeIs('profile.edit') ? 'bg-blue-100 text-blue-700' : '' }}">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                           d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
