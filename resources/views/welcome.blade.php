@@ -40,17 +40,17 @@
 <!-- Navigation -->
 <nav class="bg-white/80 backdrop-blur-sm border-b border-gray-200/60 py-4 px-6 sticky top-0 z-50 shadow-sm">
     <div class="max-w-7xl mx-auto flex justify-between items-center">
-
         <!-- Logo -->
-        <div class="flex items-center gap-3">
-            <div class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center text-white font-bold">
+        <div class="flex items-center gap-2 sm:gap-3">
+            <div class="w-7 h-7 sm:w-8 sm:h-8 bg-blue-600 rounded-lg flex items-center justify-center text-white font-bold text-sm sm:text-base">
                 R
             </div>
-            <span class="text-2xl font-bold bg-gradient-to-r from-blue-600 to-blue-700 bg-clip-text text-transparent">
+            <span class="text-xl sm:text-2xl font-bold bg-gradient-to-r from-blue-600 to-blue-700 bg-clip-text text-transparent">
                 Revenue System
             </span>
         </div>
-
+    </div>
+</nav>
         <!-- Auth Links -->
         <div class="flex items-center gap-3">
             @if (Route::has('login'))
