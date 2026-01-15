@@ -10,14 +10,18 @@ use Illuminate\Http\Request;
 
 class PaymentController extends Controller
 {
-    public function index()
-    {
-        $payments = Payment::with(['payer', 'revenueItem', 'collector'])
-            ->latest()
-            ->get();
+public function index()
+{
+    $payments = Payment::with(['payer', 'revenueItem', 'collector'])
+        ->latest()
+        ->paginate(10);
 
-        return view('admin.payments.index', compact('payments'));
-    }
+    // true totals across ALL payments, not just the current page
+    $totalAmountAll = Payment::sum('amount');
+    $totalPenaltyAll = Payment::sum('penalty_amount');
+
+    return view('admin.payments.index', compact('payments', 'totalAmountAll', 'totalPenaltyAll'));
+}
 
     public function create()
     {
@@ -90,7 +94,7 @@ class PaymentController extends Controller
         $validated = $request->validate([
             'user_id' => ['required', 'exists:users,id'],
             'revenue_item_id' => ['required', 'exists:revenue_items,id'],
-            'amount' => ['required', 'numeric', 'min:0'],
+            'amount' => ['required', 'numeric', 'min:0.01'],
             'penalty_amount' => ['nullable', 'numeric', 'min:0'],
             'status' => ['required', 'in:pending,paid,failed,reversed'],
             'payment_method' => ['nullable', 'string', 'max:255'],

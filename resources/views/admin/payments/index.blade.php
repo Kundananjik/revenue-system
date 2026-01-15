@@ -186,18 +186,26 @@
         </table>
     </div>
 
-    @if($payments->isNotEmpty())
-        <div class="mt-4 flex items-center justify-between text-sm text-gray-600">
-            <div>
-                Showing {{ $payments->count() }} payment(s)
-            </div>
-            @if($payments->sum('amount') > 0)
-                <div class="font-semibold">
-                    Total: <span class="text-blue-600">ZMW {{ number_format($payments->sum('amount'), 2) }}</span>
-                </div>
+@if($payments->hasPages())
+    <div class="mt-6">
+        {{ $payments->onEachSide(1)->links() }}
+    </div>
+@endif
+
+@if($payments->isNotEmpty())
+    <div class="mt-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 text-sm text-gray-600">
+        <div>
+            Showing {{ $payments->firstItem() }} to {{ $payments->lastItem() }} of {{ $payments->total() }} payment(s)
+        </div>
+
+        <div class="font-semibold">
+            Total: <span class="text-blue-600">ZMW {{ number_format($totalAmountAll ?? 0, 2) }}</span>
+            @if(($totalPenaltyAll ?? 0) > 0)
+                <span class="text-gray-400 mx-2">|</span>
+                Penalties: <span class="text-red-600">ZMW {{ number_format($totalPenaltyAll ?? 0, 2) }}</span>
             @endif
         </div>
-    @endif
-
+    </div>
+@endif
 </div>
 @endsection

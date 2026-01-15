@@ -37,62 +37,86 @@
 </head>
 <body class="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50/30 flex flex-col antialiased">
 
-<!-- Navigation -->
-<nav class="bg-white/80 backdrop-blur-sm border-b border-gray-200/60 py-4 px-6 sticky top-0 z-50 shadow-sm">
-    <div class="max-w-7xl mx-auto flex justify-between items-center">
+  <!-- Mobile Blocker: shows on small screens only -->
+  <div class="min-h-screen flex items-center justify-center p-6 bg-gray-950 text-white lg:hidden">
+    <div class="max-w-md text-center space-y-4">
+      <div class="mx-auto w-14 h-14 rounded-2xl bg-white/10 flex items-center justify-center">
+        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M9.75 17.25h4.5M8.25 21h7.5a2.25 2.25 0 002.25-2.25V5.25A2.25 2.25 0 0015.75 3h-7.5A2.25 2.25 0 006 5.25v13.5A2.25 2.25 0 008.25 21z"/>
+        </svg>
+      </div>
+
+      <h1 class="text-2xl font-extrabold">Desktop only</h1>
+      <p class="text-gray-300">
+        Revenue System is optimized for desktop screens. Please open this page on a laptop or desktop computer.
+      </p>
+
+      <div class="pt-2 text-sm text-gray-400">
+        Minimum recommended width: 1024px
+      </div>
+    </div>
+  </div>
+
+  <!-- Desktop Only: everything else goes here -->
+  <div class="hidden lg:flex lg:flex-col lg:min-h-screen">
+
+    <!-- Navigation -->
+    <nav class="bg-white/80 backdrop-blur-sm border-b border-gray-200/60 py-4 px-6 sticky top-0 z-50 shadow-sm">
+      <div class="max-w-7xl mx-auto flex justify-between items-center">
         <!-- Logo -->
         <div class="flex items-center gap-2 sm:gap-3">
-            <div class="w-7 h-7 sm:w-8 sm:h-8 bg-blue-600 rounded-lg flex items-center justify-center text-white font-bold text-sm sm:text-base">
-                R
-            </div>
-            <span class="text-xl sm:text-2xl font-bold bg-gradient-to-r from-blue-600 to-blue-700 bg-clip-text text-transparent">
-                Revenue System
-            </span>
-        </div
-        
+          <div class="w-7 h-7 sm:w-8 sm:h-8 bg-blue-600 rounded-lg flex items-center justify-center text-white font-bold text-sm sm:text-base">
+            R
+          </div>
+          <span class="text-xl sm:text-2xl font-bold bg-gradient-to-r from-blue-600 to-blue-700 bg-clip-text text-transparent">
+            Revenue System
+          </span>
+        </div>
+
         <!-- Auth Links -->
         <div class="flex items-center gap-3">
-            @if (Route::has('login'))
-                @auth
-@php
-    $dashboardUrl = route('user.dashboard');
+          @if (Route::has('login'))
+            @auth
+              @php
+                $dashboardUrl = route('user.dashboard');
 
-    if (auth()->check()) {
-        $user = auth()->user();
+                if (auth()->check()) {
+                  $user = auth()->user();
 
-        if (method_exists($user, 'hasRole')) {
-            if ($user->hasRole('collector')) {
-                $dashboardUrl = route('collector.dashboard');
-            }
+                  if (method_exists($user, 'hasRole')) {
+                    if ($user->hasRole('collector')) {
+                      $dashboardUrl = route('collector.dashboard');
+                    }
 
-            if ($user->hasAnyRole(['admin', 'super-admin'])) {
-                $dashboardUrl = route('admin.dashboard');
-            }
-        }
-    }
-@endphp
+                    if ($user->hasAnyRole(['admin', 'super-admin'])) {
+                      $dashboardUrl = route('admin.dashboard');
+                    }
+                  }
+                }
+              @endphp
 
-<a href="{{ $dashboardUrl }}"
-                       class="text-gray-700 hover:text-blue-600 font-semibold transition-colors duration-200">
-                        Dashboard
-                    </a>
-                @else
-                    <a href="{{ route('login') }}"
-                       class="text-gray-700 hover:text-blue-600 font-semibold px-4 py-2 rounded-lg transition-all duration-200 hover:bg-gray-50">
-                        Log in
-                    </a>
+              <a href="{{ $dashboardUrl }}"
+                 class="text-gray-700 hover:text-blue-600 font-semibold transition-colors duration-200">
+                Dashboard
+              </a>
+            @else
+              <a href="{{ route('login') }}"
+                 class="text-gray-700 hover:text-blue-600 font-semibold px-4 py-2 rounded-lg transition-all duration-200 hover:bg-gray-50">
+                Log in
+              </a>
 
-                    @if (Route::has('register'))
-                        <a href="{{ route('register') }}"
-                           class="bg-gradient-to-r from-blue-600 to-blue-700 text-white px-6 py-2.5 rounded-lg font-semibold hover:shadow-lg hover:shadow-blue-200 transition-all duration-200 transform hover:-translate-y-0.5">
-                            Register
-                        </a>
-                    @endif
-                @endauth
-            @endif
+              @if (Route::has('register'))
+                <a href="{{ route('register') }}"
+                   class="bg-gradient-to-r from-blue-600 to-blue-700 text-white px-6 py-2.5 rounded-lg font-semibold hover:shadow-lg hover:shadow-blue-200 transition-all duration-200 transform hover:-translate-y-0.5">
+                  Register
+                </a>
+              @endif
+            @endauth
+          @endif
         </div>
-    </div>
-</nav>
+      </div>
+    </nav>
 
     <!-- Main Content -->
     <main class="flex-grow flex items-center py-12">

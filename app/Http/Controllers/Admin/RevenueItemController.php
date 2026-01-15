@@ -15,13 +15,11 @@ class RevenueItemController extends Controller
     {
         // Fix 2: Usually, Revenue Items are global (managed by admin), 
         // but visible to all users. If these are global configs:
-        $items = RevenueItem::with('category')
-                    ->latest()
-                    ->paginate(10);
+$items = \App\Models\RevenueItem::with('category')
+        ->latest()
+        ->paginate(10); // change 10 to whatever you want
 
-        // Fix 3: If this is the ADMIN controller, return the admin view, 
-        // not the user view.
-        return view('admin.items.index', compact('items'));
+    return view('admin.items.index', compact('items'));
     }
 
     public function create()

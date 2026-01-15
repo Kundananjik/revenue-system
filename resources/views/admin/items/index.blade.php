@@ -129,11 +129,17 @@
         </table>
     </div>
 
-    @if($items->isNotEmpty())
-        <div class="mt-4 text-sm text-gray-600">
-            Showing {{ $items->count() }} item(s)
-        </div>
-    @endif
+@if($items->hasPages())
+    <div class="mt-6">
+        {{ $items->onEachSide(1)->links() }}
+    </div>
+@endif
+
+@if($items->isNotEmpty())
+    <div class="mt-4 text-sm text-gray-600">
+        Showing {{ $items->firstItem() }} to {{ $items->lastItem() }} of {{ $items->total() }} item(s)
+    </div>
+@endif
 
 </div>
 @endsection
