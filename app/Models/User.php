@@ -10,39 +10,23 @@ class User extends Authenticatable
 {
     use HasFactory, Notifiable;
 
-    // Define Role Constants for better code maintenance
-    const ROLE_SUPER_ADMIN = 'super-admin';
-    const ROLE_ADMIN       = 'admin';
-    const ROLE_COLLECTOR   = 'collector';
-    const ROLE_CITIZEN     = 'citizen';
+    // Roles used in your DB
+    public const ROLE_SUPER_ADMIN = 'super-admin';
+    public const ROLE_ADMIN       = 'admin';
+    public const ROLE_COLLECTOR   = 'collector';
+    public const ROLE_USER        = 'user';
 
     protected $fillable = [
         'name',
         'email',
         'password',
-        'role', 
+        'role',
     ];
 
     protected $hidden = [
         'password',
         'remember_token',
     ];
-
-    /**
-     * Relationship: A user can have many payments (as a payer).
-     */
-    public function payments()
-    {
-        return $this->hasMany(\App\Models\Payment::class, 'user_id');
-    }
-
-    /**
-     * Relationship: If the user is a collector, they manage many payments.
-     */
-    public function collectedPayments()
-    {
-        return $this->hasMany(\App\Models\Payment::class, 'collected_by');
-    }
 
     protected function casts(): array
     {
@@ -52,8 +36,18 @@ class User extends Authenticatable
         ];
     }
 
-    // --- Role Helpers ---
+    // Relationships
+    public function payments()
+    {
+        return $this->hasMany(\App\Models\Payment::class, 'user_id');
+    }
 
+    public function collectedPayments()
+    {
+        return $this->hasMany(\App\Models\Payment::class, 'collected_by');
+    }
+
+    // Role helpers
     public function isSuperAdmin(): bool
     {
         return $this->role === self::ROLE_SUPER_ADMIN;
@@ -69,8 +63,8 @@ class User extends Authenticatable
         return $this->role === self::ROLE_COLLECTOR;
     }
 
-    public function isCitizen(): bool
+    public function isUser(): bool
     {
-        return $this->role === self::ROLE_CITIZEN;
+        return $this->role === self::ROLE_USER;
     }
 }

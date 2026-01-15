@@ -6,20 +6,20 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     
     <!-- SEO Meta Tags -->
-    <meta name="description" content="Revenue System - Comprehensive solution for tracking financial growth, managing user roles, and generating detailed reports in Zambia">
-    <meta name="keywords" content="revenue management, financial tracking, payment system, Zambia, ZMW currency, revenue analytics">
+    <meta name="description" content="Revenue System is a secure platform for managing payments, tracking revenue, and generating financial reports for organizations in Zambia.">
+    <meta name="keywords" content="revenue management, payment tracking, financial reports, Zambia, ZMW, revenue analytics">
     <meta name="author" content="Kundananji Simukonda">
     
     <!-- Open Graph Meta Tags -->
-    <meta property="og:title" content="Revenue System - Manage Your Revenue with Precision">
-    <meta property="og:description" content="A comprehensive solution for tracking financial growth and managing revenue with ease">
+    <meta property="og:title" content="Revenue System - Revenue Management and Reporting">
+    <meta property="og:description" content="Track payments, manage roles, and generate accurate revenue reports in real time.">
     <meta property="og:type" content="website">
     <meta property="og:url" content="{{ url('/') }}">
     
     <!-- Twitter Card Meta Tags -->
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Revenue System - Manage Your Revenue with Precision">
-    <meta name="twitter:description" content="A comprehensive solution for tracking financial growth and managing revenue with ease">
+    <meta name="twitter:title" content="Revenue System - Revenue Management and Reporting">
+    <meta name="twitter:description" content="Track payments, manage roles, and generate accurate revenue reports in real time.">
     
     <title>Welcome | Revenue System</title>
     
@@ -48,13 +48,31 @@
             <span class="text-xl sm:text-2xl font-bold bg-gradient-to-r from-blue-600 to-blue-700 bg-clip-text text-transparent">
                 Revenue System
             </span>
-        </div>
+        </div
         
         <!-- Auth Links -->
         <div class="flex items-center gap-3">
             @if (Route::has('login'))
                 @auth
-                    <a href="{{ url('/dashboard') }}"
+@php
+    $dashboardUrl = route('user.dashboard');
+
+    if (auth()->check()) {
+        $user = auth()->user();
+
+        if (method_exists($user, 'hasRole')) {
+            if ($user->hasRole('collector')) {
+                $dashboardUrl = route('collector.dashboard');
+            }
+
+            if ($user->hasAnyRole(['admin', 'super-admin'])) {
+                $dashboardUrl = route('admin.dashboard');
+            }
+        }
+    }
+@endphp
+
+<a href="{{ $dashboardUrl }}"
                        class="text-gray-700 hover:text-blue-600 font-semibold transition-colors duration-200">
                         Dashboard
                     </a>
@@ -84,7 +102,7 @@
             <div class="space-y-8">
                 <div class="inline-flex items-center gap-2 px-4 py-2 bg-blue-50 border border-blue-100 rounded-full text-sm font-semibold text-blue-700">
                     <span class="w-2 h-2 bg-blue-600 rounded-full animate-pulse"></span>
-                    Financial Management Platform
+                    Revenue Management Platform
                 </div>
                 
                 <h1 class="text-5xl lg:text-6xl font-extrabold text-gray-900 leading-[1.1] tracking-tight">
@@ -94,12 +112,16 @@
                 </h1>
                 
                 <p class="text-xl text-gray-600 leading-relaxed max-w-xl">
-                    A comprehensive solution for tracking financial growth, managing user roles, and generating detailed reports. Streamline your workflow with our secure and intuitive platform.
+                    A centralized revenue management platform built for councils, institutions, and organizations in Zambia. Track payments, manage user roles, and generate accurate financial reports in real time with ZMW based records.
+                </p>
+
+                <p class="text-sm text-gray-500 leading-relaxed max-w-xl">
+                    Track payment status including pending, paid, failed, and reversed transactions with a complete history for accountability and reporting.
                 </p>
                 
                 <div class="flex flex-col sm:flex-row gap-4 pt-4">
                     <a href="{{ route('register') }}" class="group flex items-center justify-center gap-2 px-8 py-4 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-xl font-bold text-lg hover:shadow-xl hover:shadow-blue-200/50 transition-all duration-300 transform hover:-translate-y-1">
-                        Get Started Free
+                        Get Started
                         <svg class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
                         </svg>
@@ -121,6 +143,12 @@
                             <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"/>
                         </svg>
                         <span class="font-medium">Real-time Analytics</span>
+                    </div>
+                    <div class="flex items-center gap-2 text-gray-600">
+                        <svg class="w-5 h-5 text-green-600" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"/>
+                        </svg>
+                        <span class="font-medium">Audit-ready Records</span>
                     </div>
                 </div>
             </div>
@@ -232,6 +260,12 @@
                     </p>
                     <p class="text-xs text-gray-500">
                         Developed by <span class="text-blue-400 font-semibold">Kundananji Simukonda</span>
+                    </p>
+
+                    <p class="text-xs text-gray-600 mt-3">
+                        <a href="{{ url('/privacy') }}" class="hover:text-blue-400 transition-colors">Privacy Policy</a>
+                        <span class="mx-2">|</span>
+                        <a href="{{ url('/terms') }}" class="hover:text-blue-400 transition-colors">Terms of Use</a>
                     </p>
                 </div>
 
