@@ -1,6 +1,10 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
+
+use App\Models\User;
+    
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 
@@ -29,7 +33,6 @@ use App\Http\Controllers\Collector\CollectorPaymentController;
 |--------------------------------------------------------------------------
 */
 Route::get('/', fn () => view('welcome'));
-
 Route::view('/privacy', 'privacy')->name('privacy');
 Route::view('/terms', 'terms')->name('terms');
 
@@ -47,6 +50,32 @@ Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])
     ->middleware('auth')
     ->name('logout');
 
+/*
+|--------------------------------------------------------------------------
+| Global Dashboard (fixes: Route [dashboard] not defined)
+|--------------------------------------------------------------------------
+*/
+Route::get('/dashboard', function () {
+    $user = Auth::user();
+
+    if (! $user instanceof User) {
+        return redirect()->route('login');
+    }
+
+    if ($user->isSuperAdmin() || $user->isAdmin()) {
+        return redirect()->route('admin.dashboard');
+    }
+
+    if ($user->isCollector()) {
+        return redirect()->route('collector.dashboard');
+    }
+
+    if (! $user->hasVerifiedEmail()) {
+        return redirect()->route('verification.notice');
+    }
+
+    return redirect()->route('user.dashboard');
+})->middleware('auth')->name('dashboard');
 /*
 |--------------------------------------------------------------------------
 | User Routes
@@ -83,36 +112,19 @@ Route::middleware(['auth', 'role:collector'])
     ->name('collector.')
     ->group(function () {
 
-        Route::get('dashboard', [\App\Http\Controllers\Collector\CollectorController::class, 'dashboard'])
-            ->name('dashboard');
+        Route::get('dashboard', [CollectorController::class, 'dashboard'])->name('dashboard');
 
-        // Collector Payments
         Route::prefix('payments')->name('payments.')->group(function () {
-
-            Route::get('/', [\App\Http\Controllers\Collector\CollectorPaymentController::class, 'index'])
-                ->name('index');
-
-            Route::get('create', [\App\Http\Controllers\Collector\CollectorPaymentController::class, 'create'])
-                ->name('create');
-
-            Route::post('/', [\App\Http\Controllers\Collector\CollectorPaymentController::class, 'store'])
-                ->name('store');
-
-            Route::get('{payment}', [\App\Http\Controllers\Collector\CollectorPaymentController::class, 'show'])
-                ->name('show');
-
-            Route::get('{payment}/edit', [\App\Http\Controllers\Collector\CollectorPaymentController::class, 'edit'])
-                ->name('edit');
-
-            Route::put('{payment}', [\App\Http\Controllers\Collector\CollectorPaymentController::class, 'update'])
-                ->name('update');
-
-            Route::get('export/pdf', [\App\Http\Controllers\Collector\CollectorPaymentController::class, 'exportPdf'])
-                ->name('export.pdf');
+            Route::get('/', [CollectorPaymentController::class, 'index'])->name('index');
+            Route::get('create', [CollectorPaymentController::class, 'create'])->name('create');
+            Route::post('/', [CollectorPaymentController::class, 'store'])->name('store');
+            Route::get('{payment}', [CollectorPaymentController::class, 'show'])->name('show');
+            Route::get('{payment}/edit', [CollectorPaymentController::class, 'edit'])->name('edit');
+            Route::put('{payment}', [CollectorPaymentController::class, 'update'])->name('update');
+            Route::get('export/pdf', [CollectorPaymentController::class, 'exportPdf'])->name('export.pdf');
         });
 
-        Route::get('revenue-items', [\App\Http\Controllers\Collector\CollectorController::class, 'revenueItems'])
-            ->name('revenue.items');
+        Route::get('revenue-items', [CollectorController::class, 'revenueItems'])->name('revenue.items');
     });
 
 /*
@@ -120,13 +132,12 @@ Route::middleware(['auth', 'role:collector'])
 | Admin Routes
 |--------------------------------------------------------------------------
 */
-Route::middleware(['auth', 'role:admin|super-admin']) // allow both admin and super-admin
+Route::middleware(['auth', 'role:admin|super-admin'])
     ->prefix('admin')
     ->name('admin.')
     ->group(function () {
 
-        Route::get('dashboard', fn () => view('admin.dashboard'))
-            ->name('dashboard');
+        Route::get('dashboard', fn () => view('admin.dashboard'))->name('dashboard');
 
         Route::resource('users', UserController::class)->except(['show']);
         Route::resource('categories', RevenueCategoryController::class)->except(['show']);
@@ -135,23 +146,13 @@ Route::middleware(['auth', 'role:admin|super-admin']) // allow both admin and su
         Route::resource('penalties', AdminPenaltyController::class)->except(['show']);
 
         Route::prefix('reports')->name('reports.')->group(function () {
+            Route::get('payments/pdf', [ReportsController::class, 'paymentsPdf'])->name('payments.pdf');
+            Route::get('payments/excel', [ReportsController::class, 'paymentsExcel'])->name('payments.excel');
 
-            Route::get('payments/pdf', [ReportsController::class, 'paymentsPdf'])
-                ->name('payments.pdf');
-
-            Route::get('payments/excel', [ReportsController::class, 'paymentsExcel'])
-                ->name('payments.excel');
-
-            // only super-admin can see audit logs
             Route::middleware('role:super-admin')->group(function () {
-                Route::get('audit-logs', [AuditLogController::class, 'index'])
-                    ->name('audit-logs.index');
-
-                Route::get('audit-logs/pdf', [ReportsController::class, 'auditLogsPdf'])
-                    ->name('audit-logs.pdf');
-
-                Route::get('audit-logs/excel', [ReportsController::class, 'auditLogsExcel'])
-                    ->name('audit-logs.excel');
+                Route::get('audit-logs', [AuditLogController::class, 'index'])->name('audit-logs.index');
+                Route::get('audit-logs/pdf', [ReportsController::class, 'auditLogsPdf'])->name('audit-logs.pdf');
+                Route::get('audit-logs/excel', [ReportsController::class, 'auditLogsExcel'])->name('audit-logs.excel');
             });
         });
     });
