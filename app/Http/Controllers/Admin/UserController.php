@@ -22,42 +22,65 @@ class UserController extends Controller
         ]);
     }
 
-    public function create()
-    {
-        $this->authorize('create', User::class);
+public function edit(User $user)
+{
+    $this->authorize('update', $user);
 
-        return view('admin.users.create');
-    }
+    return view('admin.users.edit', compact('user'));
+}
 
-    public function store(Request $request)
-    {
-        $this->authorize('create', User::class);
+public function update(Request $request, User $user)
+{
+    $this->authorize('update', $user);
 
-        $data = $request->validate([
-            'name'     => 'required|string|max:255',
-            'email'    => 'required|email|unique:users,email',
-            'role'     => 'required|in:user,collector,admin',
-            'password' => 'required|min:8',
-        ]);
+    $data = $request->validate([
+        'name'  => 'required|string|max:255',
+        'email' => 'required|email|unique:users,email,' . $user->id,
+        'role'  => 'required|in:user,collector,admin,super-admin',
+        'password' => 'nullable|min:8',
+    ]);
 
+    // Only update password if provided
+    if (!empty($data['password'])) {
         $data['password'] = bcrypt($data['password']);
-
-        $user = User::create($data);
-
-        AuditLog::create([
-            'user_id'        => Auth::id(), // FIXED
-            'action'         => 'created user',
-            'auditable_type' => User::class,
-            'auditable_id'   => $user->id,
-            'new_values'     => [
-                'name'  => $user->name,
-                'email' => $user->email,
-                'role'  => $user->role,
-            ],
-        ]);
-
-        return redirect()
-            ->route('admin.users.index')
-            ->with('success', 'User created successfully');
+    } else {
+        unset($data['password']);
     }
+
+    // Optional: capture old values for audit
+    $old = $user->only(['name', 'email', 'role']);
+
+    $user->update($data);
+
+    AuditLog::create([
+        'user_id'        => Auth::id(),
+        'action'         => 'updated user',
+        'auditable_type' => User::class,
+        'auditable_id'   => $user->id,
+        'old_values'     => $old,
+        'new_values'     => $user->only(['name', 'email', 'role']),
+    ]);
+
+    return redirect()->route('admin.users.index')->with('success', 'User updated successfully');
+}
+
+public function destroy(User $user)
+{
+    $this->authorize('delete', $user);
+
+    $old = $user->only(['name', 'email', 'role']);
+
+    $user->delete();
+
+    AuditLog::create([
+        'user_id'        => Auth::id(),
+        'action'         => 'deleted user',
+        'auditable_type' => User::class,
+        'auditable_id'   => $user->id,
+        'old_values'     => $old,
+        'new_values'     => null,
+    ]);
+
+    return redirect()->route('admin.users.index')->with('success', 'User deleted successfully');
+}
 }

@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 
 use App\Models\User;
-    
+
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 
@@ -38,7 +38,7 @@ Route::view('/terms', 'terms')->name('terms');
 
 /*
 |--------------------------------------------------------------------------
-| Authentication Routes
+| Auth Routes
 |--------------------------------------------------------------------------
 */
 Route::middleware('guest')->group(function () {
@@ -46,42 +46,39 @@ Route::middleware('guest')->group(function () {
     Route::post('login', [AuthenticatedSessionController::class, 'store']);
 });
 
-Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])
-    ->middleware('auth')
-    ->name('logout');
+Route::middleware('auth')->group(function () {
+    Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
+
+    /*
+    |--------------------------------------------------------------------------
+    | Global Dashboard Redirect
+    |--------------------------------------------------------------------------
+    */
+    Route::get('/dashboard', function () {
+        $user = Auth::user();
+
+        if (! $user instanceof User) {
+            return redirect()->route('login');
+        }
+
+        if ($user->isSuperAdmin() || $user->isAdmin()) {
+            return redirect()->route('admin.dashboard');
+        }
+
+        if ($user->isCollector()) {
+            return redirect()->route('collector.dashboard');
+        }
+
+        return redirect()->route('user.dashboard');
+    })->name('dashboard');
+});
 
 /*
 |--------------------------------------------------------------------------
-| Global Dashboard (fixes: Route [dashboard] not defined)
+| User Area
 |--------------------------------------------------------------------------
 */
-Route::get('/dashboard', function () {
-    $user = Auth::user();
-
-    if (! $user instanceof User) {
-        return redirect()->route('login');
-    }
-
-    if ($user->isSuperAdmin() || $user->isAdmin()) {
-        return redirect()->route('admin.dashboard');
-    }
-
-    if ($user->isCollector()) {
-        return redirect()->route('collector.dashboard');
-    }
-
-    if (! $user->hasVerifiedEmail()) {
-        return redirect()->route('verification.notice');
-    }
-
-    return redirect()->route('user.dashboard');
-})->middleware('auth')->name('dashboard');
-/*
-|--------------------------------------------------------------------------
-| User Routes
-|--------------------------------------------------------------------------
-*/
-Route::middleware(['auth', 'verified'])
+Route::middleware(['auth'])
     ->prefix('user')
     ->name('user.')
     ->group(function () {
@@ -97,14 +94,16 @@ Route::middleware(['auth', 'verified'])
         Route::get('items', [UserRevenueItemController::class, 'index'])->name('items.index');
         Route::get('penalties', [UserPenaltyController::class, 'index'])->name('penalties.index');
 
-        Route::get('profile', [ProfileController::class, 'edit'])->name('profile.edit');
-        Route::patch('profile', [ProfileController::class, 'update'])->name('profile.update');
-        Route::delete('profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+        Route::prefix('profile')->name('profile.')->group(function () {
+            Route::get('/', [ProfileController::class, 'edit'])->name('edit');
+            Route::patch('/', [ProfileController::class, 'update'])->name('update');
+            Route::delete('/', [ProfileController::class, 'destroy'])->name('destroy');
+        });
     });
 
 /*
 |--------------------------------------------------------------------------
-| Collector Routes
+| Collector Area
 |--------------------------------------------------------------------------
 */
 Route::middleware(['auth', 'role:collector'])
@@ -121,6 +120,7 @@ Route::middleware(['auth', 'role:collector'])
             Route::get('{payment}', [CollectorPaymentController::class, 'show'])->name('show');
             Route::get('{payment}/edit', [CollectorPaymentController::class, 'edit'])->name('edit');
             Route::put('{payment}', [CollectorPaymentController::class, 'update'])->name('update');
+
             Route::get('export/pdf', [CollectorPaymentController::class, 'exportPdf'])->name('export.pdf');
         });
 
@@ -129,7 +129,7 @@ Route::middleware(['auth', 'role:collector'])
 
 /*
 |--------------------------------------------------------------------------
-| Admin Routes
+| Admin Area
 |--------------------------------------------------------------------------
 */
 Route::middleware(['auth', 'role:admin|super-admin'])
@@ -149,6 +149,7 @@ Route::middleware(['auth', 'role:admin|super-admin'])
             Route::get('payments/pdf', [ReportsController::class, 'paymentsPdf'])->name('payments.pdf');
             Route::get('payments/excel', [ReportsController::class, 'paymentsExcel'])->name('payments.excel');
 
+            // super-admin only
             Route::middleware('role:super-admin')->group(function () {
                 Route::get('audit-logs', [AuditLogController::class, 'index'])->name('audit-logs.index');
                 Route::get('audit-logs/pdf', [ReportsController::class, 'auditLogsPdf'])->name('audit-logs.pdf');

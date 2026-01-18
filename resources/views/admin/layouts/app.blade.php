@@ -107,6 +107,18 @@
                     @endauth
                 </nav>
             </div>
+                    @auth
+        <div class="p-4 border-t bg-gray-50">
+            <p class="font-semibold text-gray-900">{{ auth()->user()->name }}</p>
+            <p class="text-xs text-gray-500 mb-2">{{ ucfirst(auth()->user()->role ?? 'User') }}</p>
+            <form action="{{ route('logout') }}" method="POST">
+                @csrf
+                <button type="submit" class="text-xs font-bold text-red-600 uppercase">Logout</button>
+            </form>
+        </div>
+        @endauth
+        </aside>
+
         </aside>
 
         <!-- Mobile Sidebar (slide-in) -->
