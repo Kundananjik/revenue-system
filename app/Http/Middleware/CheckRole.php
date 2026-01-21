@@ -9,24 +9,18 @@ use Symfony\Component\HttpFoundation\Response;
 
 class CheckRole
 {
-    /**
-     * Handle an incoming request.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Closure  $next
-     * @param  string  $roles  <-- This can now accept multiple roles separated by '|'
-     */
     public function handle(Request $request, Closure $next, string $roles): Response
     {
         if (!Auth::check()) {
             return redirect()->route('login');
         }
 
-        // Convert the pipe-separated roles into an array
-        $allowedRoles = explode('|', $roles);
+        $allowedRoles = preg_split('/[,\|]/', $roles);
+        $allowedRoles = array_values(array_filter(array_map('trim', $allowedRoles)));
 
-        // Check if the user's role is in the allowed roles
-        if (!in_array($request->user()->role, $allowedRoles)) {
+        $role = Auth::user()->role; // <-- no $request->user()
+
+        if (!in_array($role, $allowedRoles, true)) {
             abort(403, 'Unauthorized. This area is restricted to ' . implode(', ', $allowedRoles) . '.');
         }
 

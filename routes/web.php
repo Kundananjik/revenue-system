@@ -1,4 +1,5 @@
 <?php
+use App\Http\Middleware\CheckRole;
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
@@ -16,6 +17,7 @@ use App\Http\Controllers\Admin\PenaltyController as AdminPenaltyController;
 use App\Http\Controllers\Admin\AuditLogController;
 use App\Http\Controllers\Admin\ReportsController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\ImportController;
 
 // User Controllers
 use App\Http\Controllers\User\DashboardController as UserDashboardController;
@@ -106,7 +108,7 @@ Route::middleware(['auth'])
 | Collector Area
 |--------------------------------------------------------------------------
 */
-Route::middleware(['auth', 'role:collector'])
+Route::middleware(['auth', CheckRole::class . ':collector'])
     ->prefix('collector')
     ->name('collector.')
     ->group(function () {
@@ -122,6 +124,7 @@ Route::middleware(['auth', 'role:collector'])
             Route::put('{payment}', [CollectorPaymentController::class, 'update'])->name('update');
 
             Route::get('export/pdf', [CollectorPaymentController::class, 'exportPdf'])->name('export.pdf');
+            Route::get('export/excel', [CollectorPaymentController::class, 'exportExcel'])->name('export.excel');
         });
 
         Route::get('revenue-items', [CollectorController::class, 'revenueItems'])->name('revenue.items');
@@ -132,7 +135,7 @@ Route::middleware(['auth', 'role:collector'])
 | Admin Area
 |--------------------------------------------------------------------------
 */
-Route::middleware(['auth', 'role:admin|super-admin'])
+Route::middleware(['auth', CheckRole::class . ':admin|super-admin'])
     ->prefix('admin')
     ->name('admin.')
     ->group(function () {
@@ -149,12 +152,26 @@ Route::middleware(['auth', 'role:admin|super-admin'])
             Route::get('payments/pdf', [ReportsController::class, 'paymentsPdf'])->name('payments.pdf');
             Route::get('payments/excel', [ReportsController::class, 'paymentsExcel'])->name('payments.excel');
 
-            // super-admin only
-            Route::middleware('role:super-admin')->group(function () {
+            Route::middleware(CheckRole::class . ':super-admin')->group(function () {
                 Route::get('audit-logs', [AuditLogController::class, 'index'])->name('audit-logs.index');
                 Route::get('audit-logs/pdf', [ReportsController::class, 'auditLogsPdf'])->name('audit-logs.pdf');
                 Route::get('audit-logs/excel', [ReportsController::class, 'auditLogsExcel'])->name('audit-logs.excel');
             });
+        });
+
+        // Imports (admin and super-admin)
+        Route::prefix('imports')->name('imports.')->group(function () {
+            Route::get('/', [ImportController::class, 'index'])->name('index');
+            Route::get('create', [ImportController::class, 'create'])->name('create');
+            Route::post('upload', [ImportController::class, 'upload'])->name('upload');
+
+            Route::get('{import}/map', [ImportController::class, 'map'])->name('map');
+            Route::post('{import}/map', [ImportController::class, 'saveMap'])->name('map.save');
+
+            Route::get('{import}/preview', [ImportController::class, 'preview'])->name('preview');
+            Route::post('{import}/run', [ImportController::class, 'run'])->name('run');
+
+            Route::get('{import}', [ImportController::class, 'show'])->name('show');
         });
     });
 

@@ -60,10 +60,10 @@
                             @endif
                         </td>
                         <td class="px-4 py-3 text-center">
-                            <a href="{{ route('collector.payment.store') }}?item_id={{ $item->id }}" 
-                               class="inline-flex items-center gap-1 text-white bg-blue-500 hover:bg-blue-600 px-3 py-1.5 rounded text-sm font-medium">
-                                Record Payment
-                            </a>
+<a href="{{ route('collector.payments.create', ['item_id' => $item->id]) }}"
+   class="inline-flex items-center gap-1 text-white bg-blue-500 hover:bg-blue-600 px-3 py-1.5 rounded text-sm font-medium">
+    Record Payment
+</a>
                         </td>
                     </tr>
                 @empty

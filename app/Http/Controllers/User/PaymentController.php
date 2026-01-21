@@ -3,10 +3,9 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Models\Payment;
-use Illuminate\Support\Facades\Auth; // Fix 1: Import Auth Facade
-use Barryvdh\DomPDF\Facade\Pdf as DomPDF; // Fix 2: Import PDF correctly
+use Illuminate\Support\Facades\Auth;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\PaymentsExport;
 
@@ -17,11 +16,10 @@ class PaymentController extends Controller
      */
     public function index()
     {
-        // Using Auth::id() instead of auth()->id() often solves IDE warnings
         $payments = Payment::with(['payer', 'revenueItem', 'collector'])
-                    ->where('user_id', Auth::id()) 
-                    ->latest()
-                    ->paginate(15);
+            ->where('user_id', Auth::id())
+            ->latest()
+            ->paginate(15);
 
         return view('user.payments.index', compact('payments'));
     }
@@ -32,13 +30,14 @@ class PaymentController extends Controller
     public function exportPdf()
     {
         $payments = Payment::with(['payer', 'revenueItem', 'collector'])
-                    ->where('user_id', Auth::id())
-                    ->get();
+            ->where('user_id', Auth::id())
+            ->latest()
+            ->get();
 
-        // Fix 3: Use the imported Alias
-        $pdf = DomPDF::loadView('user.payments.pdf', compact('payments'));
+        $pdf = Pdf::loadView('user.payments.pdf', compact('payments'))
+            ->setPaper('a4', 'landscape');
 
-        return $pdf->download('my_payments_'.now()->format('Ymd_His').'.pdf');
+        return $pdf->download('my_payments_' . now()->format('Ymd_His') . '.pdf');
     }
 
     /**
@@ -46,8 +45,9 @@ class PaymentController extends Controller
      */
     public function exportExcel()
     {
-        // Pass Auth::id() to the export class
-        return Excel::download(new PaymentsExport(Auth::id()), 
-            'my_payments_'.now()->format('Ymd_His').'.xlsx');
+        return Excel::download(
+            new PaymentsExport(Auth::id()),
+            'my_payments_' . now()->format('Ymd_His') . '.xlsx'
+        );
     }
 }

@@ -14,9 +14,12 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 class ReportsController extends Controller
 {
     use AuthorizesRequests;
+
     public function paymentsPdf()
     {
-        $payments = Payment::with(['payer','revenueItem'])->latest()->get();
+        $this->authorize('viewAny', Payment::class);
+
+        $payments = Payment::with(['payer','revenueItem','collector'])->latest()->get();
 
         $pdf = Pdf::loadView('admin.reports.payments_pdf', compact('payments'))
             ->setPaper('a4', 'landscape');
@@ -24,10 +27,13 @@ class ReportsController extends Controller
         return $pdf->download('payments-report.pdf');
     }
 
-    public function paymentsExcel()
-    {
-        return Excel::download(new PaymentsExport, 'payments-report.xlsx');
-    }
+public function paymentsExcel()
+{
+    $this->authorize('viewAny', Payment::class);
+
+    // exports ALL payments
+    return Excel::download(new PaymentsExport(), 'payments-report.xlsx');
+}
 
     public function auditLogsPdf()
     {
@@ -44,6 +50,6 @@ class ReportsController extends Controller
     {
         $this->authorize('viewAny', AuditLog::class);
 
-        return Excel::download(new AuditLogsExport, 'audit-logs-report.xlsx');
+        return Excel::download(new AuditLogsExport(), 'audit-logs-report.xlsx');
     }
 }

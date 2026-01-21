@@ -3,44 +3,56 @@
 namespace App\Exports;
 
 use App\Models\Payment;
+use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 
 class PaymentsExport implements FromCollection, WithHeadings
 {
-    protected $userId;
+    protected ?int $userId;
+    protected ?int $collectorId;
 
-    public function __construct($userId)
+    public function __construct(?int $userId = null, ?int $collectorId = null)
     {
         $this->userId = $userId;
+        $this->collectorId = $collectorId;
     }
 
-    public function collection()
+    public function collection(): Collection
     {
-        return Payment::with(['payer', 'revenueItem', 'collector'])
-            ->where('user_id', $this->userId)
-            ->get()
-            ->map(function($payment) {
-                return [
-                    'ID' => $payment->id,
-                    'Payer' => $payment->payer->name ?? '-',
-                    'Revenue Item' => $payment->revenueItem->name ?? '-',
-                    'Amount' => $payment->amount,
-                    'Penalty' => $payment->penalty_amount,
-                    'Status' => ucfirst($payment->status),
-                    'Method' => $payment->payment_method ?? '-',
-                    'Reference' => $payment->reference ?? '-',
-                    'Collector' => $payment->collector->name ?? '-',
-                    'Paid At' => $payment->paid_at?->format('Y-m-d H:i') ?? '-',
-                    'Created At' => $payment->created_at?->format('Y-m-d H:i') ?? '-',
-                ];
-            });
+        $q = Payment::with(['payer', 'revenueItem', 'collector'])->latest();
+
+        // Filter by payer (user)
+        if ($this->userId !== null) {
+            $q->where('user_id', $this->userId);
+        }
+
+        // Filter by collector
+        if ($this->collectorId !== null) {
+            $q->where('collected_by', $this->collectorId);
+        }
+
+        return $q->get()->map(function ($payment) {
+            return [
+                $payment->id,
+                $payment->payer->name ?? '-',
+                $payment->revenueItem->name ?? '-',
+                (string) $payment->amount,
+                (string) $payment->penalty_amount,
+                ucfirst((string) $payment->status),
+                $payment->payment_method ?? '-',
+                $payment->reference ?? '-',
+                $payment->collector->name ?? '-',
+                $payment->paid_at?->format('Y-m-d H:i') ?? '-',
+                $payment->created_at?->format('Y-m-d H:i') ?? '-',
+            ];
+        });
     }
 
     public function headings(): array
     {
         return [
-            'ID', 'Payer', 'Revenue Item', 'Amount', 'Penalty', 'Status', 
+            'ID', 'Payer', 'Revenue Item', 'Amount', 'Penalty', 'Status',
             'Method', 'Reference', 'Collector', 'Paid At', 'Created At'
         ];
     }

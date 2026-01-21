@@ -97,7 +97,7 @@ $recentPayments = Payment::with(['payer', 'revenueItem']) // Use 'payer' instead
     public function showPayment($id)
     {
         // Consistency: Changed 'payer' to 'user'
-        $payment = Payment::with(['revenueItem', 'user'])->findOrFail($id);
+        $payment = Payment::with(['revenueItem', 'payer'])->findOrFail($id);
 
         if ($payment->collected_by != Auth::id()) {
             abort(403, 'Unauthorized');
@@ -137,9 +137,9 @@ $recentPayments = Payment::with(['payer', 'revenueItem']) // Use 'payer' instead
     /**
      * List all active revenue items
      */
-    public function revenueItems()
-    {
-        $items = RevenueItem::where('is_active', 1)->with('category')->get();
-        return view('collector.revenue_items', compact('items'));
-    }
+public function revenueItems()
+{
+    $items = RevenueItem::where('is_active', 1)->with('category')->get();
+    return view('collector.items.index', compact('items'));
 }
+    }

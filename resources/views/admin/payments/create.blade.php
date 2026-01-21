@@ -83,11 +83,6 @@
             @error('collected_by') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
         </div>
 
-        <div class="mb-4">
-            <label class="block font-medium mb-1">Paid At</label>
-            <input type="datetime-local" name="paid_at" value="{{ old('paid_at') }}" class="w-full border-gray-300 rounded p-2">
-            @error('paid_at') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
-        </div>
 
         <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">Save Payment</button>
     </form>

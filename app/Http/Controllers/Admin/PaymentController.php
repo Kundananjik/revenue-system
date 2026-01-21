@@ -10,18 +10,18 @@ use Illuminate\Http\Request;
 
 class PaymentController extends Controller
 {
-public function index()
-{
-    $payments = Payment::with(['payer', 'revenueItem', 'collector'])
-        ->latest()
-        ->paginate(10);
+    public function index()
+    {
+        $payments = Payment::with(['payer', 'revenueItem', 'collector'])
+            ->latest()
+            ->paginate(10);
 
-    // true totals across ALL payments, not just the current page
-    $totalAmountAll = Payment::sum('amount');
-    $totalPenaltyAll = Payment::sum('penalty_amount');
+        // true totals across ALL payments, not just the current page
+        $totalAmountAll = Payment::sum('amount');
+        $totalPenaltyAll = Payment::sum('penalty_amount');
 
-    return view('admin.payments.index', compact('payments', 'totalAmountAll', 'totalPenaltyAll'));
-}
+        return view('admin.payments.index', compact('payments', 'totalAmountAll', 'totalPenaltyAll'));
+    }
 
     public function create()
     {
@@ -57,8 +57,14 @@ public function index()
             'payment_method' => ['nullable', 'string', 'max:255'],
             'reference' => ['nullable', 'string', 'max:255', 'unique:payments,reference'],
             'collected_by' => ['nullable', 'exists:users,id'],
-            'paid_at' => ['nullable', 'date'],
         ]);
+
+        // Auto set paid_at
+        if ($validated['status'] === 'paid') {
+            $validated['paid_at'] = now();
+        } else {
+            $validated['paid_at'] = null;
+        }
 
         Payment::create($validated);
 
@@ -100,8 +106,15 @@ public function index()
             'payment_method' => ['nullable', 'string', 'max:255'],
             'reference' => ['nullable', 'string', 'max:255', 'unique:payments,reference,' . $payment->id],
             'collected_by' => ['nullable', 'exists:users,id'],
-            'paid_at' => ['nullable', 'date'],
         ]);
+
+        // Auto set / clear paid_at based on status
+        if ($validated['status'] === 'paid') {
+            // keep existing paid_at if already set, otherwise set now
+            $validated['paid_at'] = $payment->paid_at ?? now();
+        } else {
+            $validated['paid_at'] = null;
+        }
 
         $payment->update($validated);
 
@@ -122,7 +135,7 @@ public function index()
     private function normalizeNullableInputs(Request $request): void
     {
         // Convert empty strings from form selects/inputs into null so "nullable|exists" works correctly
-        foreach (['penalty_amount', 'payment_method', 'reference', 'collected_by', 'paid_at'] as $field) {
+        foreach (['penalty_amount', 'payment_method', 'reference', 'collected_by'] as $field) {
             if ($request->has($field) && $request->input($field) === '') {
                 $request->merge([$field => null]);
             }

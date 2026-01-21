@@ -12,6 +12,8 @@ use App\Models\Payment;
 
 use App\Policies\UserPolicy;
 use App\Policies\AuditLogPolicy;
+use App\Policies\PaymentPolicy;
+
 
 use App\Observers\RevenueItemObserver;
 use App\Observers\PaymentObserver;
@@ -28,6 +30,8 @@ class AppServiceProvider extends ServiceProvider
         // Register policies (Laravel 11 way)
         Gate::policy(User::class, UserPolicy::class);
         Gate::policy(AuditLog::class, AuditLogPolicy::class);
+        Gate::policy(Payment::class, PaymentPolicy::class);
+
 
         // Register observers
         RevenueItem::observe(RevenueItemObserver::class);
