@@ -14,14 +14,24 @@ class RedirectIfAuthenticated
 
         foreach ($guards as $guard) {
             if (Auth::guard($guard)->check()) {
-                $user = Auth::user();
+                $user = Auth::guard($guard)->user();
 
-                // Redirect based on role
-                if ($user->role === 'admin' || $user->role === 'super-admin') {
+                if (!$user) {
+                    break;
+                }
+
+                // Admin and Super Admin
+                if (in_array($user->role, ['admin', 'super-admin'], true)) {
                     return redirect()->route('admin.dashboard');
                 }
 
-                return redirect('/dashboard');
+                // Collector
+                if ($user->role === 'collector') {
+                    return redirect()->route('collector.dashboard');
+                }
+
+                // Normal user
+                return redirect()->route('user.dashboard');
             }
         }
 
