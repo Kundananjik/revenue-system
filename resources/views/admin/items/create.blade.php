@@ -1,9 +1,9 @@
-@extends('admin.layouts.app')
+@extends('layouts.app')
 
 @section('title', 'Create Revenue Item')
 
 @section('content')
-<div class="max-w-3xl mx-auto bg-white p-6 rounded shadow">
+<div class="max-w-3xl mx-auto bg-white rounded-xl border border-gray-200 shadow-sm p-6">
     <h1 class="text-2xl font-bold mb-6">Create Revenue Item</h1>
 
     <form action="{{ route('admin.items.store') }}" method="POST">
@@ -98,3 +98,4 @@
     </form>
 </div>
 @endsection
+

@@ -137,9 +137,26 @@ $recentPayments = Payment::with(['payer', 'revenueItem']) // Use 'payer' instead
     /**
      * List all active revenue items
      */
-public function revenueItems()
-{
-    $items = RevenueItem::where('is_active', 1)->with('category')->get();
-    return view('collector.items.index', compact('items'));
-}
+    public function revenueItems()
+    {
+        $items = RevenueItem::where('is_active', 1)->with('category')->get();
+        return view('collector.items.index', compact('items'));
     }
+
+    /**
+     * List penalties for payments collected by this collector
+     */
+    public function penalties()
+    {
+        $collectorId = Auth::id();
+
+        $penalties = Penalty::with(['revenueItem', 'payment'])
+            ->whereHas('payment', function ($query) use ($collectorId) {
+                $query->where('collected_by', $collectorId);
+            })
+            ->latest('applied_at')
+            ->get();
+
+        return view('collector.penalties.index', compact('penalties'));
+    }
+}

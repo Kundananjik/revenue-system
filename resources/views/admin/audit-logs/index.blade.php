@@ -1,9 +1,9 @@
-@extends('admin.layouts.app')
+@extends('layouts.app')
 
 @section('title', 'Audit Logs')
 
 @section('content')
-<div class="max-w-7xl mx-auto py-6 px-4">
+<div class="max-w-7xl mx-auto">
 
     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
         <div>
@@ -15,15 +15,15 @@
         @if(auth()->user()->role === 'super-admin')
             <div class="flex flex-wrap gap-2">
                 <a href="{{ route('admin.reports.audit-logs.pdf') }}" 
-                   class="inline-flex items-center px-4 py-2 bg-red-600 border border-transparent rounded-lg font-semibold text-xs text-white uppercase tracking-widest hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition ease-in-out duration-150 shadow-sm">
-                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                   class="inline-flex items-center gap-2 bg-red-600 text-white px-4 py-2 rounded-lg text-sm font-semibold shadow-sm hover:bg-red-700 transition">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"/>
                     </svg>
                     Export PDF
                 </a>
                 <a href="{{ route('admin.reports.audit-logs.excel') }}" 
-                   class="inline-flex items-center px-4 py-2 bg-green-600 border border-transparent rounded-lg font-semibold text-xs text-white uppercase tracking-widest hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition ease-in-out duration-150 shadow-sm">
-                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                   class="inline-flex items-center gap-2 bg-green-600 text-white px-4 py-2 rounded-lg text-sm font-semibold shadow-sm hover:bg-green-700 transition">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
                     </svg>
                     Export Excel
@@ -32,8 +32,7 @@
         @endif
     </div>
 
-    <div class="overflow-x-auto bg-white rounded-lg shadow-lg">
-        <table class="min-w-full divide-y divide-gray-200">
+    <x-ui.table>
             <thead class="bg-gray-50">
                 <tr>
                     <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">ID</th>
@@ -60,7 +59,7 @@
                                     <span class="font-medium text-gray-800">{{ $log->user->name }}</span>
                                 @else
                                     <div class="h-8 w-8 bg-gradient-to-br from-gray-500 to-gray-600 rounded-full flex items-center justify-center text-white">
-                                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                                             <path fill-rule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z"/>
                                         </svg>
                                     </div>
@@ -83,7 +82,7 @@
                                 };
                             @endphp
                             <span class="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-semibold rounded-full border {{ $actionConfig['class'] }} uppercase">
-                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="{{ $actionConfig['icon'] }}"/>
                                 </svg>
                                 {{ $log->action }}
@@ -93,7 +92,7 @@
                         {{-- Model --}}
                         <td class="px-4 py-3 text-sm">
                             <span class="inline-flex items-center gap-1 bg-gray-100 px-2.5 py-1 rounded-md text-xs font-medium text-gray-700">
-                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4"/>
                                 </svg>
                                 {{ class_basename($log->auditable_type) }}
@@ -134,7 +133,7 @@
                         {{-- IP Address --}}
                         <td class="px-4 py-3 text-sm">
                             <div class="flex items-center gap-1 text-gray-600">
-                                <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"/>
                                 </svg>
                                 <span class="font-mono text-xs">{{ $log->ip_address }}</span>
@@ -145,13 +144,13 @@
                         <td class="px-4 py-3 text-sm whitespace-nowrap">
                             <div class="flex flex-col text-gray-600">
                                 <div class="flex items-center gap-1">
-                                    <svg class="w-3 h-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
                                     </svg>
                                     <span class="text-xs font-medium">{{ $log->created_at->format('M d, Y') }}</span>
                                 </div>
                                 <div class="flex items-center gap-1 ml-4">
-                                    <svg class="w-3 h-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
                                     </svg>
                                     <span class="text-xs text-gray-500">{{ $log->created_at->format('H:i:s') }}</span>
@@ -162,19 +161,12 @@
                 @empty
                     <tr>
                         <td colspan="7" class="px-4 py-12 text-center">
-                            <div class="flex flex-col items-center justify-center text-gray-500">
-                                <svg class="w-16 h-16 mb-3 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
-                                </svg>
-                                <p class="text-lg font-medium mb-1">No audit logs found</p>
-                                <p class="text-sm text-gray-400">System activities will be recorded here</p>
-                            </div>
+                            <x-ui.empty-state title="No audit logs found" message="System activities will be recorded here" />
                         </td>
                     </tr>
                 @endforelse
             </tbody>
-        </table>
-    </div>
+        </x-ui.table>
 
     {{-- Pagination --}}
     @if($logs->hasPages())
@@ -207,3 +199,8 @@
 
 </div>
 @endsection
+
+
+
+
+

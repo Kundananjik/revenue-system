@@ -312,7 +312,7 @@
                         <span>Call</span>
                     </a>
                     
-                    <a href="https://www.linkedin.com/in/kundananji-simukonda" target="_blank" rel="noopener noreferrer" class="group flex items-center gap-2 hover:text-blue-400 transition-all duration-200 text-sm font-medium" aria-label="LinkedIn">
+                    <a href="https://www.linkedin.com/in/kundananjisimukonda/" target="_blank" rel="noopener noreferrer" class="group flex items-center gap-2 hover:text-blue-400 transition-all duration-200 text-sm font-medium" aria-label="LinkedIn">
                         <div class="p-2 bg-gray-800 rounded-lg group-hover:bg-blue-600/10 transition-colors">
                             <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
                                 <path d="M19 0h-14c-2.76 0-5 2.24-5 5v14c0 2.76 2.24 5 5 5h14c2.76 0 5-2.24 5-5v-14c0-2.76-2.24-5-5-5zm-11 19h-3v-10h3v10zm-1.5-11.25c-.97 0-1.75-.78-1.75-1.75s.78-1.75 1.75-1.75 1.75.78 1.75 1.75-.78 1.75-1.75 1.75zm13.5 11.25h-3v-5.5c0-1.38-1.12-2.5-2.5-2.5s-2.5 1.12-2.5 2.5v5.5h-3v-10h3v1.4c.8-1.2 2.5-1.4 3.5-.2 1 1.2 1 3 1 3v5.8z"/>

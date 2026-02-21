@@ -9,10 +9,12 @@
 
             <div>
                 <h2 class="text-lg font-semibold text-gray-900">@yield('page-title', 'Dashboard')</h2>
-                <p class="text-sm text-gray-500">
-                    Logged in as:
-                    <span class="font-semibold text-blue-700 uppercase">{{ optional(auth()->user())->role }}</span>
-                </p>
+                @auth
+                    <p class="text-sm text-gray-500">
+                        Logged in as:
+                        <span class="font-semibold text-blue-700 uppercase">{{ optional(auth()->user())->role }}</span>
+                    </p>
+                @endauth
             </div>
         </div>
 

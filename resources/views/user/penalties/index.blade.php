@@ -1,10 +1,10 @@
-@extends('layouts.user.app')
+@extends('layouts.app')
 
 @section('title','My Penalties')
 @section('page-title','My Penalties')
 
 @section('content')
-<div class="max-w-7xl mx-auto py-6 px-4">
+<div class="max-w-7xl mx-auto">
 
     {{-- Header --}}
     <div class="flex justify-between items-center mb-6">
@@ -13,24 +13,16 @@
 
     {{-- Alert --}}
     @if(session('success'))
-        <div class="bg-green-100 border-l-4 border-green-500 text-green-700 px-4 py-3 rounded mb-6 shadow-sm flex items-center justify-between">
-            <div class="flex items-center gap-2">
-                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"/>
-                </svg>
-                <span>{{ session('success') }}</span>
-            </div>
-            <button onclick="this.parentElement.remove()" class="text-green-700 hover:text-green-900">
-                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                    <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"/>
-                </svg>
-            </button>
-        </div>
+        <x-ui.alert type="success" dismissable>
+            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"/>
+            </svg>
+            <span>{{ session('success') }}</span>
+        </x-ui.alert>
     @endif
 
     {{-- Table --}}
-    <div class="overflow-x-auto bg-white rounded-lg shadow-lg">
-        <table class="min-w-full divide-y divide-gray-200">
+    <x-ui.table>
             <thead class="bg-gray-50">
                 <tr>
                     <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">ID</th>
@@ -59,22 +51,21 @@
                         <td class="px-4 py-3 text-sm text-gray-600">{{ $penalty->applied_at->format('d M Y') }}</td>
                         <td class="px-4 py-3">
                             @if($penalty->is_paid)
-                                <span class="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-semibold leading-5 rounded-full bg-green-100 text-green-800">Paid</span>
+                                <x-ui.badge type="success">Paid</x-ui.badge>
                             @else
-                                <span class="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-semibold leading-5 rounded-full bg-red-100 text-red-800">Unpaid</span>
+                                <x-ui.badge type="danger">Unpaid</x-ui.badge>
                             @endif
                         </td>
                     </tr>
                 @empty
                     <tr>
                         <td colspan="8" class="px-4 py-12 text-center text-gray-500">
-                            No penalties found
+                            <x-ui.empty-state title="No penalties found" />
                         </td>
                     </tr>
                 @endforelse
             </tbody>
-        </table>
-    </div>
+    </x-ui.table>
 
     {{-- Pagination & Summary --}}
     @if($penalties->isNotEmpty())
@@ -99,3 +90,8 @@
 
 </div>
 @endsection
+
+
+
+
+

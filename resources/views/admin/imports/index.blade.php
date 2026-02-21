@@ -1,11 +1,11 @@
-@extends('admin.layouts.app')
+@extends('layouts.app')
 
 @section('title', 'Imports')
 @section('page-title', 'Imports')
 
 @section('header-actions')
     <a href="{{ route('admin.imports.create') }}"
-       class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-blue-600 text-white font-semibold shadow-sm hover:bg-blue-700 transition">
+       class="inline-flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-semibold shadow-sm hover:bg-blue-700 transition">
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
         </svg>
@@ -16,7 +16,7 @@
 @section('content')
 <div class="space-y-6">
 
-    <div class="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden">
+    <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
         <div class="p-6 border-b border-gray-100 flex items-center justify-between">
             <div>
                 <h2 class="text-xl font-bold text-gray-900">Import Batches</h2>
@@ -87,7 +87,7 @@
 
                                 @if(in_array($imp->status, ['uploaded','mapped'], true))
                                     <a href="{{ route('admin.imports.map', $imp) }}"
-                                       class="inline-flex items-center gap-2 px-3 py-2 rounded-xl border border-blue-200 text-blue-700 font-semibold hover:bg-blue-50 transition ml-2">
+                                       class="inline-flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-semibold shadow-sm hover:bg-blue-700 transition">
                                         Map
                                     </a>
                                 @endif
@@ -104,7 +104,7 @@
                         <tr>
                             <td colspan="7" class="px-6 py-12 text-center">
                                 <div class="flex flex-col items-center justify-center text-gray-500">
-                                    <svg class="w-12 h-12 mb-3 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <svg class="w-5 h-5 mb-3 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                               d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"/>
                                     </svg>
@@ -119,8 +119,7 @@
                         </tr>
                     @endforelse
                 </tbody>
-            </table>
-        </div>
+            </x-ui.table>
 
         <div class="p-6 border-t border-gray-100">
             {{ $imports->links() }}
@@ -128,3 +127,7 @@
     </div>
 </div>
 @endsection
+
+
+
+

@@ -1,9 +1,9 @@
-@extends('admin.layouts.app')
+@extends('layouts.app')
 
 @section('title', 'Create Penalty')
 
 @section('content')
-<div class="max-w-4xl mx-auto bg-white p-6 rounded shadow">
+<div class="max-w-4xl mx-auto bg-white rounded-xl border border-gray-200 shadow-sm p-6">
     <h1 class="text-2xl font-bold mb-6">Create Penalty</h1>
 
     <form action="{{ route('admin.penalties.store') }}" method="POST">
@@ -72,3 +72,4 @@
     </form>
 </div>
 @endsection
+

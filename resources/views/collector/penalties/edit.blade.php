@@ -1,9 +1,9 @@
-@extends('collector.layouts.app')
+@extends('layouts.app')
 
 @section('title', 'Edit Penalty')
 
 @section('content')
-<div class="max-w-4xl mx-auto bg-white p-6 rounded shadow">
+<div class="max-w-4xl mx-auto bg-white rounded-xl border border-gray-200 shadow-sm p-6">
     <h1 class="text-2xl font-bold mb-6">Edit Penalty</h1>
 
     <form action="{{ route('collector.payment.update', $penalty->id) }}" method="POST">
@@ -44,3 +44,4 @@
     </form>
 </div>
 @endsection
+

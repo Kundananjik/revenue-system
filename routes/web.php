@@ -128,6 +128,7 @@ Route::middleware(['auth', CheckRole::class . ':collector'])
         });
 
         Route::get('revenue-items', [CollectorController::class, 'revenueItems'])->name('revenue.items');
+        Route::get('penalties', [CollectorController::class, 'penalties'])->name('penalties.index');
     });
 
 /*

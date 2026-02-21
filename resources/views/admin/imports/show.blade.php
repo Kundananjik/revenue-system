@@ -1,4 +1,4 @@
-@extends('admin.layouts.app')
+@extends('layouts.app')
 
 @section('title', 'Import Details')
 @section('page-title', 'Import Details')
@@ -18,7 +18,7 @@
 
 <div class="max-w-7xl mx-auto space-y-6">
 
-    <div class="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden">
+    <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
         <div class="p-6 border-b border-gray-100 flex items-center justify-between">
             <div>
                 <div class="flex items-center gap-3">
@@ -53,23 +53,23 @@
         </div>
 
         <div class="p-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
-            <div class="bg-gray-50 border border-gray-200 rounded-2xl p-4">
+            <div class="bg-gray-50 border border-gray-200 rounded-xl p-4">
                 <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Total</p>
                 <p class="text-2xl font-bold text-gray-900 mt-2">{{ (int) ($stats['total'] ?? 0) }}</p>
             </div>
-            <div class="bg-green-50 border border-green-200 rounded-2xl p-4">
+            <div class="bg-green-50 border border-green-200 rounded-xl p-4">
                 <p class="text-xs font-semibold text-green-700 uppercase tracking-wider">Valid</p>
                 <p class="text-2xl font-bold text-green-800 mt-2">{{ (int) ($stats['valid'] ?? 0) }}</p>
             </div>
-            <div class="bg-red-50 border border-red-200 rounded-2xl p-4">
+            <div class="bg-red-50 border border-red-200 rounded-xl p-4">
                 <p class="text-xs font-semibold text-red-700 uppercase tracking-wider">Invalid</p>
                 <p class="text-2xl font-bold text-red-800 mt-2">{{ (int) ($stats['invalid'] ?? 0) }}</p>
             </div>
-            <div class="bg-blue-50 border border-blue-200 rounded-2xl p-4">
+            <div class="bg-blue-50 border border-blue-200 rounded-xl p-4">
                 <p class="text-xs font-semibold text-blue-700 uppercase tracking-wider">Imported</p>
                 <p class="text-2xl font-bold text-blue-800 mt-2">{{ (int) ($stats['imported'] ?? 0) }}</p>
             </div>
-            <div class="bg-yellow-50 border border-yellow-200 rounded-2xl p-4">
+            <div class="bg-yellow-50 border border-yellow-200 rounded-xl p-4">
                 <p class="text-xs font-semibold text-yellow-700 uppercase tracking-wider">Skipped</p>
                 <p class="text-2xl font-bold text-yellow-800 mt-2">{{ (int) ($stats['skipped'] ?? 0) }}</p>
             </div>
@@ -77,7 +77,7 @@
 
         @if($import->status === 'failed' && $import->error_message)
             <div class="p-6 pt-0">
-                <div class="bg-red-50 border border-red-200 text-red-800 rounded-2xl p-4">
+                <div class="bg-red-50 border border-red-200 text-red-800 rounded-xl p-4">
                     <p class="font-semibold">Import failed</p>
                     <p class="text-sm mt-2 break-words">{{ $import->error_message }}</p>
                 </div>
@@ -86,7 +86,7 @@
     </div>
 
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div class="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden">
+        <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
             <div class="p-6 border-b border-gray-100">
                 <h3 class="text-lg font-bold text-gray-900">Invalid Rows</h3>
                 <p class="text-sm text-gray-500 mt-1">Rows blocked by validation</p>
@@ -122,7 +122,7 @@
             </div>
         </div>
 
-        <div class="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden">
+        <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
             <div class="p-6 border-b border-gray-100">
                 <h3 class="text-lg font-bold text-gray-900">Skipped Rows</h3>
                 <p class="text-sm text-gray-500 mt-1">Usually duplicates by reference</p>
@@ -161,3 +161,5 @@
 
 </div>
 @endsection
+
+

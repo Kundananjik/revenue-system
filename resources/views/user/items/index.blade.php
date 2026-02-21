@@ -1,17 +1,17 @@
-@extends('layouts.user.app')
+@extends('layouts.app')
 
 @section('title', 'Revenue Items')
 @section('page-title', 'Revenue Items')
 
 @section('content')
-<div class="max-w-7xl mx-auto py-6 px-4">
+<div class="max-w-7xl mx-auto">
 
     <div class="flex justify-between items-center mb-6">
         <h1 class="text-3xl font-bold text-gray-800">Revenue Items</h1>
     </div>
 
     @if(session('success'))
-        <div class="bg-green-100 border-l-4 border-green-500 text-green-700 px-4 py-3 rounded mb-6 shadow-sm flex items-center justify-between">
+        <div class="rounded-xl border border-green-200 bg-green-50 text-green-800 px-4 py-3 shadow-sm flex items-center justify-between">
             <div class="flex items-center gap-2">
                 <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                     <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"/>
@@ -19,15 +19,14 @@
                 <span>{{ session('success') }}</span>
             </div>
             <button onclick="this.parentElement.remove()" class="text-green-700 hover:text-green-900">
-                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                     <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"/>
                 </svg>
             </button>
         </div>
     @endif
 
-    <div class="overflow-x-auto bg-white rounded-lg shadow-lg">
-        <table class="min-w-full divide-y divide-gray-200">
+    <x-ui.table>
             <thead class="bg-gray-50">
                 <tr>
                     <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">ID</th>
@@ -54,25 +53,21 @@
                         <td class="px-4 py-3 text-sm text-gray-600">{{ number_format($item->penalty_rate * 100, 2) }}%</td>
                         <td class="px-4 py-3">
                             @if($item->is_active)
-                                <span class="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-semibold leading-5 rounded-full bg-green-100 text-green-800">Active</span>
+                                <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-green-100 text-green-800">Active</span>
                             @else
-                                <span class="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-semibold leading-5 rounded-full bg-red-100 text-red-800">Inactive</span>
+                                <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-red-100 text-red-800">Inactive</span>
                             @endif
                         </td>
                     </tr>
                 @empty
                     <tr>
                         <td colspan="8" class="px-4 py-12 text-center">
-                            <div class="flex flex-col items-center justify-center text-gray-500">
-                                <p class="text-lg font-medium mb-1">No revenue items found for your account</p>
-                                <p class="text-sm text-gray-400">Please check back later or contact admin</p>
-                            </div>
+                            <x-ui.empty-state title="No revenue items found for your account" message="Please check back later or contact admin" />
                         </td>
                     </tr>
                 @endforelse
             </tbody>
-        </table>
-    </div>
+        </x-ui.table>
 
     @if($items->isNotEmpty())
         <div class="mt-4 text-sm text-gray-600">
@@ -86,3 +81,9 @@
 
 </div>
 @endsection
+
+
+
+
+
+

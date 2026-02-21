@@ -1,4 +1,4 @@
-@extends('admin.layouts.app')
+@extends('layouts.app')
 
 @section('title', 'New Import')
 @section('page-title', 'New Import')
@@ -7,7 +7,7 @@
 <div class="max-w-3xl mx-auto space-y-6">
 
     @if ($errors->any())
-        <div class="bg-red-50 border border-red-200 text-red-800 rounded-2xl p-4">
+        <div class="bg-red-50 border border-red-200 text-red-800 rounded-xl p-4">
             <p class="font-semibold mb-2">Fix these errors</p>
             <ul class="list-disc pl-5 space-y-1 text-sm">
                 @foreach ($errors->all() as $error)
@@ -17,7 +17,7 @@
         </div>
     @endif
 
-    <div class="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden">
+    <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
         <div class="p-6 border-b border-gray-100">
             <h2 class="text-xl font-bold text-gray-900">Upload File</h2>
             <p class="text-sm text-gray-500 mt-1">CSV only for now</p>
@@ -55,3 +55,5 @@
     </div>
 </div>
 @endsection
+
+

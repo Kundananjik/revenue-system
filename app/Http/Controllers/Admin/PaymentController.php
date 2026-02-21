@@ -7,9 +7,17 @@ use App\Models\Payment;
 use App\Models\RevenueItem;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class PaymentController extends Controller
 {
+    use AuthorizesRequests;
+
+    public function __construct()
+    {
+        $this->authorizeResource(Payment::class, 'payment');
+    }
+
     public function index()
     {
         $payments = Payment::with(['payer', 'revenueItem', 'collector'])

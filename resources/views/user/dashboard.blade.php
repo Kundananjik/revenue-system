@@ -1,4 +1,4 @@
-@extends('layouts.user.app')
+@extends('layouts.app')
 
 @section('title', 'User Dashboard')
 @section('page-title', 'Dashboard')
@@ -30,16 +30,16 @@
         ->get();
 @endphp
 
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+<div class="max-w-7xl mx-auto">
 
     <h1 class="text-3xl font-bold mb-8 text-gray-800">User Dashboard</h1>
 
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
 
-        <div class="bg-gradient-to-r from-blue-500 to-blue-600 text-white p-6 rounded-lg shadow-lg transform hover:scale-105 transition">
+        <div class="bg-gradient-to-r from-blue-500 to-blue-600 text-white p-6 rounded-xl shadow-sm transform hover:scale-105 transition">
             <div class="flex justify-between items-center">
                 <h2 class="text-lg font-semibold">Total Payments</h2>
-                <svg class="w-8 h-8 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg class="w-5 h-5 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                           d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
                 </svg>
@@ -50,10 +50,10 @@
             </a>
         </div>
 
-        <div class="bg-gradient-to-r from-red-500 to-red-600 text-white p-6 rounded-lg shadow-lg transform hover:scale-105 transition">
+        <div class="bg-gradient-to-r from-red-500 to-red-600 text-white p-6 rounded-xl shadow-sm transform hover:scale-105 transition">
             <div class="flex justify-between items-center">
                 <h2 class="text-lg font-semibold">My Penalties</h2>
-                <svg class="w-8 h-8 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg class="w-5 h-5 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                           d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
                 </svg>
@@ -64,10 +64,10 @@
             </a>
         </div>
 
-        <div class="bg-gradient-to-r from-green-500 to-green-600 text-white p-6 rounded-lg shadow-lg transform hover:scale-105 transition">
+        <div class="bg-gradient-to-r from-green-500 to-green-600 text-white p-6 rounded-xl shadow-sm transform hover:scale-105 transition">
             <div class="flex justify-between items-center">
                 <h2 class="text-lg font-semibold">Revenue Items</h2>
-                <svg class="w-8 h-8 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg class="w-5 h-5 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                           d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
                 </svg>
@@ -78,10 +78,10 @@
             </a>
         </div>
 
-        <div class="bg-gradient-to-r from-yellow-500 to-yellow-600 text-white p-6 rounded-lg shadow-lg transform hover:scale-105 transition">
+        <div class="bg-gradient-to-r from-yellow-500 to-yellow-600 text-white p-6 rounded-xl shadow-sm transform hover:scale-105 transition">
             <div class="flex justify-between items-center">
                 <h2 class="text-lg font-semibold">Account Status</h2>
-                <svg class="w-8 h-8 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg class="w-5 h-5 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/>
                 </svg>
             </div>
@@ -93,10 +93,10 @@
 
     </div>
 
-    <div class="bg-white rounded-lg shadow-lg p-6 overflow-x-auto">
+    <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
         <h2 class="text-2xl font-bold mb-4 text-gray-800">Recent Payments</h2>
 
-        <table class="min-w-full border border-gray-200 divide-y divide-gray-200">
+        <x-ui.table>
             <thead class="bg-gray-50">
                 <tr>
                     <th class="px-4 py-2 text-left text-gray-600 font-medium uppercase text-xs">ID</th>
@@ -128,9 +128,15 @@
                         <td class="px-4 py-2">ZMW {{ number_format($p->amount ?? 0, 2) }}</td>
                         <td class="px-4 py-2">ZMW {{ number_format($p->penalty_amount ?? 0, 2) }}</td>
                         <td class="px-4 py-2">
-                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full {{ $statusPill }}">
-                                {{ ucfirst($p->status) }}
-                            </span>
+                            @php
+                                $badgeType = match($p->status) {
+                                    'paid' => 'success',
+                                    'pending' => 'warning',
+                                    'failed' => 'danger',
+                                    default => 'neutral',
+                                };
+                            @endphp
+                            <x-ui.badge :type="$badgeType">{{ ucfirst($p->status) }}</x-ui.badge>
                         </td>
                         <td class="px-4 py-2">
                             {{ $date ? $date->format('d M Y') : '-' }}
@@ -139,20 +145,17 @@
                 @empty
                     <tr>
                         <td colspan="6" class="px-4 py-8 text-center">
-                            <div class="flex flex-col items-center justify-center text-gray-500">
-                                <svg class="w-12 h-12 mb-2 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                          d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"/>
-                                </svg>
-                                <p class="font-medium">No payments yet</p>
-                                <p class="text-sm mt-1">Once you make payments, they will appear here</p>
-                            </div>
+                            <x-ui.empty-state title="No payments yet" message="Once you make payments, they will appear here" />
                         </td>
                     </tr>
                 @endforelse
             </tbody>
-        </table>
-    </div>
+        </x-ui.table>
 
 </div>
 @endsection
+
+
+
+
+

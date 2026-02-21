@@ -1,14 +1,13 @@
-@extends('collector.layouts.app')
+@extends('layouts.app')
 
 @section('title', 'Penalties')
 
 @section('content')
-<div class="max-w-7xl mx-auto py-6 px-4">
+<div class="max-w-7xl mx-auto">
 
     <h1 class="text-3xl font-bold text-gray-800 mb-6">Penalties</h1>
 
-    <div class="overflow-x-auto bg-white rounded-lg shadow-lg">
-        <table class="min-w-full divide-y divide-gray-200">
+    <x-ui.table>
             <thead class="bg-gray-50">
                 <tr>
                     <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">ID</th>
@@ -33,26 +32,21 @@
                         <td class="px-4 py-3 text-sm text-gray-600">{{ $penalty->applied_at->format('M d, Y') }}</td>
                         <td class="px-4 py-3">
                             @if($penalty->is_paid)
-                                <span class="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-semibold leading-5 rounded-full bg-green-100 text-green-800">
-                                    Paid
-                                </span>
+                                <x-ui.badge type="success">Paid</x-ui.badge>
                             @else
-                                <span class="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-semibold leading-5 rounded-full bg-red-100 text-red-800">
-                                    Unpaid
-                                </span>
+                                <x-ui.badge type="danger">Unpaid</x-ui.badge>
                             @endif
                         </td>
                     </tr>
                 @empty
                     <tr>
                         <td colspan="8" class="px-4 py-12 text-center text-gray-500">
-                            No penalties found
+                            <x-ui.empty-state title="No penalties found" />
                         </td>
                     </tr>
                 @endforelse
             </tbody>
-        </table>
-    </div>
+    </x-ui.table>
 
     @if($penalties->isNotEmpty())
         <div class="mt-4 text-sm text-gray-600">
@@ -62,3 +56,7 @@
 
 </div>
 @endsection
+
+
+
+
