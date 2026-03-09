@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register | Revenue System</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
         
     <!-- Favicons -->
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
@@ -60,7 +60,7 @@
                         value="{{ old('name') }}" 
                         required 
                         autofocus 
-                        placeholder="John Doe"
+                        placeholder="Full name"
                         class="w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500 p-2.5 border"
                     >
                 </div>
@@ -72,7 +72,7 @@
                         name="email" 
                         value="{{ old('email') }}" 
                         required 
-                        placeholder="you@example.com"
+                        placeholder="name@email.com"
                         class="w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500 p-2.5 border"
                     >
                 </div>

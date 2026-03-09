@@ -1,5 +1,5 @@
 <header class="sticky top-0 z-30 bg-white/80 backdrop-blur border-b border-gray-200">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
+    <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-3 sm:py-4 flex flex-wrap items-center justify-between gap-3">
         <div class="flex items-center gap-3">
             <button type="button" class="md:hidden p-2 rounded-lg hover:bg-gray-100" @click="open = true" aria-label="Open sidebar">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -18,7 +18,7 @@
             </div>
         </div>
 
-        <div class="flex items-center gap-3">
+        <div class="flex items-center gap-2 sm:gap-3 flex-wrap justify-end w-full sm:w-auto">
             @yield('header-actions')
 
             @auth

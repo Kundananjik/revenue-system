@@ -23,11 +23,7 @@
     
     <title>Welcome | Revenue System</title>
     
-    <!-- Preconnect for Performance -->
-    <link rel="preconnect" href="https://cdn.tailwindcss.com">
-    
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
     
     <!-- Favicons -->
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
@@ -36,30 +32,6 @@
     <link rel="manifest" href="/site.webmanifest">
 </head>
 <body class="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50/30 flex flex-col antialiased">
-
-  <!-- Mobile Blocker: shows on small screens only -->
-  <div class="min-h-screen flex items-center justify-center p-6 bg-gray-950 text-white lg:hidden">
-    <div class="max-w-md text-center space-y-4">
-      <div class="mx-auto w-14 h-14 rounded-2xl bg-white/10 flex items-center justify-center">
-        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M9.75 17.25h4.5M8.25 21h7.5a2.25 2.25 0 002.25-2.25V5.25A2.25 2.25 0 0015.75 3h-7.5A2.25 2.25 0 006 5.25v13.5A2.25 2.25 0 008.25 21z"/>
-        </svg>
-      </div>
-
-      <h1 class="text-2xl font-extrabold">Desktop only</h1>
-      <p class="text-gray-300">
-        Revenue System is optimized for desktop screens. Please open this page on a laptop or desktop computer.
-      </p>
-
-      <div class="pt-2 text-sm text-gray-400">
-        Minimum recommended width: 1024px
-      </div>
-    </div>
-  </div>
-
-  <!-- Desktop Only: everything else goes here -->
-  <div class="hidden lg:flex lg:flex-col lg:min-h-screen">
 
     <!-- Navigation -->
     <nav class="bg-white/80 backdrop-blur-sm border-b border-gray-200/60 py-4 px-6 sticky top-0 z-50 shadow-sm">
@@ -119,8 +91,8 @@
     </nav>
 
     <!-- Main Content -->
-    <main class="flex-grow flex items-center py-12">
-        <div class="max-w-7xl mx-auto px-6 py-16 grid lg:grid-cols-2 gap-16 items-center w-full">
+    <main class="flex-grow flex items-center py-8 sm:py-10 lg:py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 py-8 sm:py-12 lg:py-16 grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-center w-full">
             
             <!-- Left Column: Hero Content -->
             <div class="space-y-8">
@@ -129,13 +101,13 @@
                     Revenue Management Platform
                 </div>
                 
-                <h1 class="text-5xl lg:text-6xl font-extrabold text-gray-900 leading-[1.1] tracking-tight">
+                <h1 class="text-3xl sm:text-4xl lg:text-6xl font-extrabold text-gray-900 leading-[1.1] tracking-tight">
                     Manage your<br/>
                     <span class="bg-gradient-to-r from-blue-600 to-blue-700 bg-clip-text text-transparent">Revenue</span> with<br/>
                     precision and ease
                 </h1>
                 
-                <p class="text-xl text-gray-600 leading-relaxed max-w-xl">
+                <p class="text-base sm:text-lg lg:text-xl text-gray-600 leading-relaxed max-w-xl">
                     A centralized revenue management platform built for councils, institutions, and organizations in Zambia. Track payments, manage user roles, and generate accurate financial reports in real time with ZMW based records.
                 </p>
 
@@ -155,7 +127,7 @@
                     </a>
                 </div>
 
-                <div class="flex items-center gap-8 pt-4 text-sm">
+                <div class="flex flex-wrap items-center gap-4 sm:gap-8 pt-4 text-sm">
                     <div class="flex items-center gap-2 text-gray-600">
                         <svg class="w-5 h-5 text-green-600" fill="currentColor" viewBox="0 0 20 20">
                             <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"/>
@@ -178,7 +150,7 @@
             </div>
 
             <!-- Right Column: Feature Showcase -->
-            <div class="hidden lg:block relative">
+            <div class="relative mt-4 lg:mt-0">
                 <div class="bg-white p-8 rounded-2xl shadow-2xl border border-gray-100/50 backdrop-blur-sm">
                     <div class="mb-6 pb-6 border-b border-gray-100">
                         <div class="flex items-center gap-3 mb-4">
@@ -265,7 +237,7 @@
                 </div>
                 
                 <!-- Floating Card -->
-                <div class="absolute -bottom-8 -left-8 bg-gradient-to-br from-blue-600 to-blue-700 text-white p-6 rounded-2xl shadow-2xl shadow-blue-900/20 border border-blue-500/20">
+                <div class="hidden md:block absolute -bottom-8 -left-8 bg-gradient-to-br from-blue-600 to-blue-700 text-white p-6 rounded-2xl shadow-2xl shadow-blue-900/20 border border-blue-500/20">
                     <p class="text-xs opacity-90 uppercase tracking-wider font-bold mb-1">Platform Access</p>
                     <p class="text-2xl font-extrabold">Comprehensive Control</p>
                     <p class="text-xs opacity-80 mt-2">Manage your revenue with ease</p>

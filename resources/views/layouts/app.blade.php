@@ -5,8 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>@yield('title', 'Dashboard') | Revenue System</title>
 
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
 
     <!-- Favicons -->
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
@@ -17,7 +16,7 @@
     @stack('styles')
 </head>
 
-<body x-data="{ open: false }" class="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50/30 font-sans">
+<body x-data="{ open: false }" x-on:keydown.escape.window="open = false" class="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50/30 font-sans">
     <div class="flex min-h-screen">
         <!-- Mobile overlay -->
         <div x-show="open" x-cloak class="fixed inset-0 bg-black/40 z-40 md:hidden" @click="open = false"></div>
@@ -30,7 +29,7 @@
                x-transition:leave="transition ease-in duration-150"
                x-transition:leave-start="translate-x-0"
                x-transition:leave-end="-translate-x-full"
-               class="fixed inset-y-0 left-0 w-72 bg-white shadow-2xl border-r border-gray-200 z-50 md:hidden">
+               class="fixed inset-y-0 left-0 w-[86vw] max-w-72 bg-white shadow-2xl border-r border-gray-200 z-50 md:hidden">
 
             <div class="p-6 flex flex-col h-full">
                 <div class="flex items-center justify-between mb-8">
@@ -40,7 +39,6 @@
                         </div>
                         <div>
                             <div class="text-lg font-bold text-gray-900 leading-tight">Revenue System</div>
-                            <div class="text-xs text-gray-500">Unified Portal</div>
                         </div>
                     </div>
 
@@ -51,7 +49,7 @@
                     </button>
                 </div>
 
-                <nav class="space-y-2 flex-1">
+                <nav class="space-y-2 flex-1 overflow-y-auto pr-1" @click="if ($event.target.closest('a')) open = false">
                     @auth
                         @if(auth()->user()->role === 'admin' || auth()->user()->role === 'super-admin')
                             @include('layouts.partials.sidebar-admin')
@@ -100,7 +98,6 @@
                     </div>
                     <div>
                         <div class="text-lg font-bold text-gray-900 leading-tight">Revenue System</div>
-                        <div class="text-xs text-gray-500">Unified Portal</div>
                     </div>
                 </div>
 
@@ -148,7 +145,7 @@
         <div class="flex-1 flex flex-col min-w-0">
             @include('layouts.partials.header')
 
-            <main class="p-6">
+            <main class="px-3 py-4 sm:px-6 sm:py-6">
                 {{ $slot ?? $content ?? '' }}
                 @yield('content')
             </main>

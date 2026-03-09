@@ -235,6 +235,9 @@ class ImportController extends Controller
     private function ensureAdmin(): void
     {
         $u = Auth::user();
+        if (!$u || !in_array((string) $u->role, ['admin', 'super-admin'], true)) {
+            abort(403, 'Unauthorized. Admin access required.');
+        }
     }
 
     private function requiredFieldsForType(string $type): array

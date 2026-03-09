@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Models\RevenueItem;
 use App\Models\RevenueCategory;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth; // Fix 1: Added Auth Facade
 
 class RevenueItemController extends Controller
@@ -45,7 +44,6 @@ $items = \App\Models\RevenueItem::with('category')
         RevenueItem::create([
             'category_id' => $validated['category_id'],
             'name' => $validated['name'],
-            'slug' => Str::slug($validated['name']),
             'description' => $validated['description'] ?? null,
             'code' => $validated['code'] ?? null,
             'calculation_type' => $validated['calculation_type'],
@@ -83,7 +81,6 @@ $items = \App\Models\RevenueItem::with('category')
         $item->update([
             'category_id' => $validated['category_id'],
             'name' => $validated['name'],
-            'slug' => Str::slug($validated['name']),
             'description' => $validated['description'] ?? null,
             'code' => $validated['code'] ?? null,
             'calculation_type' => $validated['calculation_type'],
